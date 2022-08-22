@@ -1,0 +1,261 @@
+new Vue({
+  el: '#app',
+  vuetify: new Vuetify(),
+  data() {
+    return {
+      authorized: isAuthorized === 1 ? true : false,
+      darkMode: false,
+      debug: true,
+      channels: [],
+      applicationConfiguration,
+      preferenceOptions,
+      channelSelection,
+      formSubmitting: false,
+      brand: brand,
+      locale: locale,
+      subscriber: {
+        subscriberId: subscriberId,
+        subscriberKey: subscriberKey,
+        emailAddress: emailAddress,
+        jobId: jobId,
+        preferences: []
+      }
+    }
+  },
+  beforeMount() {
+    this.getPreferenceChannels();
+  },
+  mounted() {
+    this.debug && this.debugData();
+    this.getExistingPreferences();
+  },
+  methods: {
+    debugData() {
+      console.log({
+        config: this.applicationConfiguration,
+        preferenceOptions: this.preferenceOptions
+      })
+    },
+    getPreferenceChannels(preferenceOptions) {
+      this.channels = Object.keys(this.preferenceOptions.channels)
+    },
+    getDefaultChannelSelection() {
+      const channels = this.channels;
+      this.channelSelection = channels[0];
+    },
+    async getExistingPreferences() {
+      try {
+        const subscriberId = this.subscriber.subscriberId;
+        const emailAddress = this.subscriber.emailAddress;
+        const submitRequest = await axios.post(`${this.apiBaseURL}getCurrentPreferences`, {
+          subscriberId,
+          channels: this.channels,
+          emailAddress
+        })
+
+        if (submitRequest.data.Status === 'OK') {
+          this.subscriber.preferences = submitRequest.data.Results;
+        }
+
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    onUpdateDarkMode() {
+      this.darkMode = !this.darkMode
+    },
+    onUpdateChannelSelection($event) {
+      this.channelSelection = $event
+    },
+    async onSubmitPreferenceForm($event) {
+      try {
+        console.log($event)
+        const channels = this.channels;
+        const postData = [];
+
+        for (const c in channels) {
+          const channel = channels[c];
+          let channelProperties = new Array();
+          let unsubscribe = $event[channel]['unsubscribe']['unsubscribed'];
+
+
+          if ($event[channel]['unsubscribe']['hasUpdatedValues']) {
+            channelProperties.push({
+              Name: 'statusUpdatedDate',
+              Value: new Date()
+            })
+          }
+
+          if (Object.prototype.hasOwnProperty.call($event, 'profile')) {
+            const profileData = $event.profile;
+            if (profileData.hasUpdatedValues) {
+              channelProperties.push({
+                Name: 'profileUpdatedDate',
+                Value: new Date()
+              })
+
+
+              for (const pro in profileData) {
+                channelProperties.push({
+                  Name: pro,
+                  Value: profileData[pro]
+                })
+              }
+            }
+          }
+
+
+          if (Object.prototype.hasOwnProperty.call($event[channel], 'preferences')) {
+            const preferenceData = $event[channel]['preferences'];
+
+            if (preferenceData.hasUpdatedValues) {
+              channelProperties.push({
+                Name: 'preferenceUpdatedDate',
+                Value: new Date()
+              })
+
+              for (const pre in preferenceData) {
+                let preferenceValue = preferenceData[pre]
+
+                channelProperties.push({
+                  Name: pre,
+                  Value: preferenceValue
+                })
+              }
+            }
+
+          }
+
+          if (Object.prototype.hasOwnProperty.call($event[channel], 'subscriptions')) {
+            const subscriptionObject = $event[channel]['subscriptions'];
+            const subscriptionsData = subscriptionObject.subscriptions;
+
+            if (subscriptionObject.hasUpdatedValues) {
+              channelProperties.push({
+                Name: 'subscriptionsUpdatedDate',
+                Value: new Date()
+              })
+
+              let subscriptions = ''
+              for (const sub of subscriptionsData) {
+                subscriptions += `${sub}|`
+              }
+
+              subscriptions = subscriptions.substring(0, subscriptions.length - 1)
+              channelProperties.push({
+                Name: 'subscriptions',
+                Value: subscriptions
+              })
+
+            }
+          }
+
+          if ($event[channel]['unsubscribe']['hasUpdatedValues']) {
+            channelProperties.push({
+              Name: 'unsubscribed',
+              Value: unsubscribe
+            })
+          }
+
+          if (
+            $event[channel]['subscriptions']['hasUpdatedValues'] ||
+            $event[channel]['preferences']['hasUpdatedValues'] ||
+            $event[channel]['unsubscribe']['hasUpdatedValues'] ||
+            $event['profile']['hasUpdatedValues']
+          ) {
+            channelProperties.push(
+              {
+                Name: 'subscriberId',
+                Value: this.subscriber.subscriberId
+              },
+              {
+                Name: 'emailAddress',
+                Value: this.subscriber.emailAddress
+              },
+              {
+                Name: 'channel',
+                Value: channel
+              })
+          }
+
+          let propertyArray = channelProperties.map(prop => prop.Name !== 'hasUpdatedValues' && prop)
+
+          console.log(propertyArray)
+          
+          if (propertyArray.length) {
+            postData.push(propertyArray.filter(Boolean))
+          }
+
+          channelProperties = [];
+        }
+
+        if (postData.length === 1) {
+          const isEmailChannel = postData[0].filter((obj) => obj.Value === 'email')
+          if (isEmailChannel) {
+            let preference = postData[0].filter((obj) => obj.Name === 'preference')
+            let subscriptions = postData[0].filter((obj) => obj.Name === 'subscriptions')
+
+            preference = preference.length && preference[0].Value.toLowerCase();
+            subscriptions = subscriptions.length && subscriptions[0].Value.toLowerCase();
+
+            if (preference && preference.includes('unsubscribe') || subscriptions && subscriptions.includes('unsubscribe')) {
+              unsubscribe = true;
+            }
+          }
+        }
+
+        const submitRequest = await axios.post(`${this.apiBaseURL}submitPreferenceForm`, {
+          postData,
+          subscriber: {
+            emailAddress,
+            subscriberKey,
+            subscriberId,
+            jobId
+          }
+        })
+
+
+        console.log(submitRequest)
+        if (submitRequest.data.updatePreferences && submitRequest.data.updatePreferences.Status === 'OK') {
+          Vue.$toast.success(`Thank you for updating your preferences!`)
+          this.getExistingPreferences();
+        } else {
+          Vue.$toast.error(`There was an error with your request.`)
+        }
+
+
+        if (submitRequest.data.unsubscribe && submitRequest.data.unsubscribe.Status === 'OK') {
+          if (submitRequest.data.unsubscribe.action && submitRequest.data.unsubscribe.action === 'unsubscribe') {
+            Vue.$toast.success(`You have been unsubscribed.`)
+          } else {
+            Vue.$toast.success(`You have been subscribed.`)
+          }
+          this.getExistingPreferences();
+        } else {
+          if (submitRequest.data.unsubscribe.action && submitRequest.data.unsubscribe.action === 'unsubscribe') {
+            Vue.$toast.error(`There was an error unsubscribing.`)
+          } else {
+            Vue.$toast.error(`There was an error subscribing.`)
+          }
+        }
+
+
+      } catch (err) {
+        console.log(err)
+        Vue.$toast.error(`There was an error: [${err.message}]`)
+      }
+    }
+  },
+  computed: {
+    apiBaseURL() {
+      return `${this.applicationConfiguration.apiBaseURL}?brand=${this.brand}&locale=${this.locale}&action=`
+    },
+    branding() {
+      if (this.applicationConfiguration.branding.supportDarkMode && this.darkMode) {
+        return this.applicationConfiguration.branding.dark
+      }
+
+      return this.applicationConfiguration.branding.default
+    }
+  }
+})

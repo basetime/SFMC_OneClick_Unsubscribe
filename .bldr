@@ -1,0 +1,92 @@
+[
+  {
+    "id": 137271,
+    "context": "contentBuilder",
+    "bldrId": "86ee5953-5eab-484b-b585-9bddabfd26f0",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/backend/processing_api.html"
+  },
+  {
+    "id": 137272,
+    "context": "contentBuilder",
+    "bldrId": "6fc226e0-4c78-4c42-a24d-e2615c306a41",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/app_html.html"
+  },
+  {
+    "id": 137273,
+    "context": "contentBuilder",
+    "bldrId": "6703c08e-bddd-4b17-b55f-977e499d1a4b",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/app_js.html"
+  },
+  {
+    "id": 137274,
+    "context": "contentBuilder",
+    "bldrId": "898ad7fe-d0e6-4e67-9dbb-4924484eea28",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components/channel_drawer.html"
+  },
+  {
+    "id": 137275,
+    "context": "contentBuilder",
+    "bldrId": "7b6baf70-f69f-4a01-afd2-67cd81bc332c",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components/branding_bar.html"
+  },
+  {
+    "id": 137276,
+    "context": "contentBuilder",
+    "bldrId": "ffdc0793-808e-430b-92dd-3046058b26db",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components/preference_form.html"
+  },
+  {
+    "id": 137277,
+    "context": "contentBuilder",
+    "bldrId": "8111eb7f-60e2-45f1-a170-d813d92867ff",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/styles/submit_button_animation.html"
+  },
+  {
+    "id": 137278,
+    "context": "contentBuilder",
+    "bldrId": "b2ed6a8e-c811-47a7-8bf8-350dc730e81d",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/lib/ssjs/wsProxy.html"
+  },
+  {
+    "id": 137279,
+    "context": "contentBuilder",
+    "bldrId": "c6c91d78-0e7c-4e64-8bed-fa2bc4610af4",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/lib/validation/subscriber_validation.html"
+  },
+  {
+    "id": 137280,
+    "context": "contentBuilder",
+    "bldrId": "cec8d97a-f694-4906-bd94-6a8891310a52",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components/unauthorized_user.html"
+  },
+  {
+    "id": 137281,
+    "context": "contentBuilder",
+    "bldrId": "69f852b0-e5c0-419d-ba07-3ace0496f41e",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/lib/ssjs/utils.html"
+  },
+  {
+    "id": 137282,
+    "context": "contentBuilder",
+    "bldrId": "2ca8d070-29a5-4922-a2fb-165fa21f1b34",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components/legal.html"
+  },
+  {
+    "id": 137283,
+    "context": "contentBuilder",
+    "bldrId": "26e24fd9-992f-452d-a542-fcf75cb003cd",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/configurations/ikea_kitchen/en-us/app_configuration.html"
+  },
+  {
+    "id": 137284,
+    "context": "contentBuilder",
+    "bldrId": "2d13d6bd-062d-4fa3-9c50-4f404225b2b5",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/configurations/ikea_kitchen/en-us/preference_options.html"
+  },
+  {
+    "id": 137285,
+    "context": "contentBuilder",
+    "bldrId": "93f3f5f5-926b-439f-8860-ea74076de070",
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components/_component_imports.html"
+  }
+]

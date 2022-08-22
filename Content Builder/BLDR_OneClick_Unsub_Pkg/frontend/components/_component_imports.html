@@ -1,0 +1,62 @@
+%%=TreatAsContent(ContentBlockByName('Content Builder\BLDR_OneClick_Unsub_Pkg\frontend\styles\submit_button_animation'))=%%
+%%=TreatAsContent(ContentBlockByName('Content Builder\BLDR_OneClick_Unsub_Pkg\lib\validation\subscriber_validation'))=%%
+
+<script runat="server">
+  Platform.Load("core", "1.1.1");
+
+  var brand = Platform.Request.GetQueryStringParameter('brand')
+  var locale = Platform.Request.GetQueryStringParameter('locale')
+
+  var configPath = 'Content Builder\\BLDR_OneClick_Unsub_Pkg\\configurations' + '\\ ' + brand + '\\ ' + locale
+  var applicationConfigurationPath = configPath + '\\app_configuration'
+  var preferenceOptionsPath = configPath + '\\preference_options'
+
+  applicationConfigurationPath = applicationConfigurationPath.replace(/(?<=\\)\ /g, '')
+  preferenceOptionsPath = preferenceOptionsPath.replace(/(?<=\\)\ /g, '')
+
+  var applicationConfiguration = Platform.Function.ContentBlockByName(applicationConfigurationPath)
+  var preferenceOptions = Platform.Function.ContentBlockByName(preferenceOptionsPath)
+  var applicationConfigurationJSON = Platform.Function.ParseJSON(applicationConfiguration)
+  var map = applicationConfigurationJSON.map;
+
+  var channelDrawer = Platform.Function.ContentBlockByName(map.content_block.channel_drawer)
+  var preferenceForm = Platform.Function.ContentBlockByName(map.content_block.preference_form)
+  var unauthorizedUser = Platform.Function.ContentBlockByName(map.content_block.unauthorized_user)
+  var brandingBar = Platform.Function.ContentBlockByName(map.content_block.branding_bar)
+  var legal = Platform.Function.ContentBlockByName(map.content_block.legal)
+  var appJS = Platform.Function.ContentBlockByName(map.content_block.app_js)
+
+</script>
+
+%%=Concat('<sc','rip','t>')=%%
+
+  Vue.use(VueToast, {
+  position: 'top-right',
+  duration: 6000,
+  dismissable: true
+  });
+
+  Vue.use(VueFormulate)
+
+  const applicationConfiguration = <ctrl:var name=applicationConfiguration />
+  const preferenceOptions = <ctrl:var name=preferenceOptions />
+
+  const channelKeys = Object.keys(preferenceOptions.channels);
+  const channelSelection = channelKeys[0];
+
+  const isAuthorized = <ctrl:var name=authorized />
+  const subscriberId = <ctrl:var name=subscriberId />
+  const emailAddress = <ctrl:var name=emailAddress />
+  const subscriberKey = <ctrl:var name=subscriberKey />
+  const jobId = <ctrl:var name=jobId />
+  const brand = "<ctrl:var name=brand />"
+  const locale = "<ctrl:var name=locale />"
+
+  <ctrl:var name=appJS />
+  <ctrl:var name=brandingBar />
+  <ctrl:var name=channelDrawer />
+  <ctrl:var name=preferenceForm />
+  <ctrl:var name=unauthorizedUser />
+  <ctrl:var name=legal />
+
+  %%=Concat('</sc','rip','t>')=%%

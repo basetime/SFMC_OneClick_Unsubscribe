@@ -1,0 +1,392 @@
+{
+  "instanceDetails": {
+    "instance": "Avagate",
+    "parentMID": "534001218",
+    "activeMID": "534001218"
+  },
+  "contentBuilder": {
+    "folders": [
+      {
+        "id": 116666,
+        "name": "BLDR_OneClick_Unsub_Pkg",
+        "parentId": 35088,
+        "categoryType": "asset",
+        "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg"
+      },
+      {
+        "id": 116667,
+        "name": "backend",
+        "parentId": 116666,
+        "categoryType": "asset",
+        "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/backend"
+      },
+      {
+        "id": 116668,
+        "name": "frontend",
+        "parentId": 116666,
+        "categoryType": "asset",
+        "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend"
+      },
+      {
+        "id": 116669,
+        "name": "components",
+        "parentId": 116668,
+        "categoryType": "asset",
+        "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components"
+      },
+      {
+        "id": 116670,
+        "name": "styles",
+        "parentId": 116668,
+        "categoryType": "asset",
+        "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/styles"
+      },
+      {
+        "id": 116671,
+        "name": "lib",
+        "parentId": 116666,
+        "categoryType": "asset",
+        "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/lib"
+      },
+      {
+        "id": 116672,
+        "name": "ssjs",
+        "parentId": 116671,
+        "categoryType": "asset",
+        "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/lib/ssjs"
+      },
+      {
+        "id": 116673,
+        "name": "validation",
+        "parentId": 116671,
+        "categoryType": "asset",
+        "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/lib/validation"
+      },
+      {
+        "id": 116674,
+        "name": "configurations",
+        "parentId": 116666,
+        "categoryType": "asset",
+        "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/configurations"
+      },
+      {
+        "id": 116675,
+        "name": "ikea_kitchen",
+        "parentId": 116674,
+        "categoryType": "asset",
+        "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/configurations/ikea_kitchen"
+      },
+      {
+        "id": 116676,
+        "name": "en-us",
+        "parentId": 116675,
+        "categoryType": "asset",
+        "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/configurations/ikea_kitchen/en-us"
+      }
+    ],
+    "assets": [
+      {
+        "bldrId": "86ee5953-5eab-484b-b585-9bddabfd26f0",
+        "name": "processing_api",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116667,
+          "name": "backend",
+          "parentId": 116666,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/backend"
+        },
+        "content": "<script runat=\"server\">\n  Platform.Load(\"core\", \"1.1.1\");\n  Platform.Response.SetResponseHeader(\"Access-Control-Allow-Origin\", \"*\");\n  Platform.Response.SetResponseHeader('Strict-Transport-Security', 'max-age=200');\n  Platform.Response.SetResponseHeader('X-XSS-Protection', '1; mode=block');\n  Platform.Response.SetResponseHeader('X-Frame-Options', 'Deny');\n  Platform.Response.SetResponseHeader('X-Content-Type-Options', 'nosniff');\n  Platform.Response.SetResponseHeader('Referrer-Policy', 'strict-origin-when-cross-origin');\n  Platform.Response.SetResponseHeader('Content-Security-Policy', \"default-src 'self'\");\n\n  var postData = Platform.Request.GetPostData();\n  var postJSON = Platform.Function.ParseJSON(postData);\n\n  var action = Platform.Request.GetQueryStringParameter('action');\n  var payload = Platform.Request.GetQueryStringParameter('payload');\n\n  var brand = Platform.Request.GetQueryStringParameter('brand');\n  var locale = Platform.Request.GetQueryStringParameter('locale');\n\n  var configPath = 'Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\configurations' + '\\\\ ' + brand + '\\\\ ' + locale\n  var applicationConfigurationPath = configPath + '\\\\app_configuration'\n  applicationConfigurationPath = applicationConfigurationPath.replace(/(?<=\\\\)\\ /g, '')\n\n  var applicationConfiguration = Platform.Function.ContentBlockByName(applicationConfigurationPath)\n  var applicationConfigurationJSON = Platform.Function.ParseJSON(applicationConfiguration)\n  var map = applicationConfigurationJSON.map;\n\n  var preferenceCenterDataExtensionExternalKey = map.data_extension.preferenceCenterExternalKey;\n\n  Platform.Function.ContentBlockByName(map.content_block.ssjs.wsProxy)\n  Platform.Function.ContentBlockByName(map.content_block.ssjs.utils)\n\n  var fns = {\n    utils: util(),\n    wsProxy: wsProxy()\n  }\n\n  var res = '';\n  var reqConfig = {};\n\n  //Begin API Control Block\n  //Run specific set of code/functions based on the 'action' parameter\n  //After code is finished, the 'response' function returns the output and 'break' stops the processing\n  switch (action) {\n    case 'testUnsub':\n\n      var sends = Send.Retrieve({ Property: \"ID\", SimpleOperator: \"equals\", Value: 12730 });\n      fns.utils.response(sends)\n\n      break;\n    case 'submitPreferenceForm':\n      var updateData = postJSON.postData;\n      var subscriber = postJSON.subscriber;\n      var unsubscribe;\n\n      var formatted;\n      var payload = [];\n      for (var u = 0; u < updateData.length; u++) {\n        var update = updateData[u];\n\n        payload.push({\n          CustomerKey: preferenceCenterDataExtensionExternalKey,\n          Properties: update\n        })\n\n        var logUnsubEvent\n        if (\n          applicationConfigurationJSON.action_toggles.unsubscribe === true ||\n          applicationConfigurationJSON.action_toggles.unsubscribe === 'true'\n        ) {\n          var formatedUpdate = fns.utils.formatResult(payload, 'Properties')\n          logUnsubEvent = postJSON.subscriber;\n          logUnsubEvent.unsubscribed = formatedUpdate[0].unsubscribed;\n\n          var allSubscribersListID = fns.utils.getAllSubscribersListID(fns)\n          var subscriberCurrentStatus = fns.utils.getSubscriberStatus(subscriber.subscriberId, fns)\n          // add All Subscribers ListID to UnsubEvent Object\n          logUnsubEvent.listId = allSubscribersListID;\n\n          unsubscribe = fns.utils.toggleUnsubscribe(logUnsubEvent, subscriberCurrentStatus, fns)\n        }\n      }\n\n      //update item\n      reqConfig = {\n        soapObjName: \"DataExtensionObject\",\n        options: {\n          SaveOptions: [{\n            PropertyName: \"*\",\n            SaveAction: \"UpdateAdd\"\n          }]\n        },\n        payload: payload\n      }\n      var updatePreferences = fns.wsProxy.update(reqConfig);\n\n\n      res = {\n        updatePreferences: updatePreferences,\n        unsubscribe: unsubscribe\n      }\n      break;\n\n\n    case 'getCurrentPreferences':\n      var preferences;\n      var preferenceRequest;\n\n      reqConfig = {\n        dataExtensionKey: preferenceCenterDataExtensionExternalKey,\n        cols: [],\n        filter: {\n          Property: \"subscriberId\",\n          SimpleOperator: \"equals\",\n          Value: postJSON.subscriberId\n        }\n      };\n\n      preferenceRequest = fns.utils.getDERecords(reqConfig, fns);\n\n      if (preferenceRequest.Status === 'OK') {\n        // Add Record if it does not exist\n        if (preferenceRequest.Results.length === 0) {\n          var channels = postJSON.channels;\n          var payload = [];\n          var updateConfig;\n\n          for (var c = 0; c < channels.length; c++) {\n            var channel = channels[c];\n\n            payload.push({\n              CustomerKey: preferenceCenterDataExtensionExternalKey,\n              Properties: [\n                {\n                  Name: 'subscriberId',\n                  Value: postJSON.subscriberId\n                },\n                {\n                  Name: 'emailAddress',\n                  Value: postJSON.emailAddress\n                },\n                {\n                  Name: 'channel',\n                  Value: channel\n                }\n              ]\n            })\n          }\n\n          //update item\n          updateConfig = {\n            soapObjName: \"DataExtensionObject\",\n            options: {\n              SaveOptions: [{\n                PropertyName: \"*\",\n                SaveAction: \"UpdateAdd\"\n              }]\n            },\n            payload: payload\n          }\n\n          var addRecords = fns.wsProxy.update(updateConfig);\n          preferenceRequest = fns.utils.getDERecords(reqConfig, fns)\n        }\n\n        preferences = fns.utils.formatResult(preferenceRequest.Results, 'Properties')\n\n        res = {\n          Status: 'OK',\n          Results: preferences\n        }\n      } else {\n        res = preferenceRequest;\n      }\n\n      break;\n  };\n\n  fns.utils.response(res)\n\n</script>",
+        "id": 137271,
+        "customerKey": "506478f2-7ccd-4b1d-8106-9d6dfe6ed64b"
+      },
+      {
+        "bldrId": "6fc226e0-4c78-4c42-a24d-e2615c306a41",
+        "name": "app_html",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116668,
+          "name": "frontend",
+          "parentId": 116666,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend"
+        },
+        "content": "<v-app>\n  <v-main>\n    <v-row overflow=\"hidden\">\n      <v-col cols=\"12\">\n        <branding-bar @update-dark-mode=\"onUpdateDarkMode\" :application-configuration=\"applicationConfiguration\" :dark-mode=\"darkMode\" :branding=\"branding\"></branding-bar>\n      </v-col>\n    </v-row>\n    <v-row v-show=\"authorized\">\n      <v-col cols=\"2\">\n        <channel-drawer @update-channel-selection=\"onUpdateChannelSelection\" :channels=\"channels\" :branding=\"branding\"\n          :preference-options=\"preferenceOptions\"></channel-drawer>\n      </v-col>\n      <v-col cols=\"10\">\n        <preference-form @submit-preference-form=\"onSubmitPreferenceForm\" :channels=\"channels\" :subscriber-preferences=\"subscriber.preferences\" :form-submitting=\"formSubmitting\"\n          :branding=\"branding\" :preference-options=\"preferenceOptions\" :channel-selection=\"channelSelection\">\n        </preference-form>\n      </v-col>\n    </v-row>\n    <v-row v-show=\"!authorized\">\n      <unauthorized-user :brand=\"applicationConfiguration.branding.brandName\" :branding=\"branding\" :unauthorized=\"preferenceOptions.unauthorized\">\n      </unauthorized-user>\n    </v-row>\n    <v-row>\n      <legal :brand=\"applicationConfiguration.branding.brandName\" :branding=\"branding\" :legal=\"preferenceOptions.legal\">\n      </legal>\n    </v-row>\n  </v-main>\n</v-app>",
+        "id": 137272,
+        "customerKey": "85742322-49be-4d0e-8146-3108cd0426ac"
+      },
+      {
+        "bldrId": "6703c08e-bddd-4b17-b55f-977e499d1a4b",
+        "name": "app_js",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116668,
+          "name": "frontend",
+          "parentId": 116666,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend"
+        },
+        "content": "new Vue({\n  el: '#app',\n  vuetify: new Vuetify(),\n  data() {\n    return {\n      authorized: isAuthorized === 1 ? true : false,\n      darkMode: false,\n      debug: true,\n      channels: [],\n      applicationConfiguration,\n      preferenceOptions,\n      channelSelection,\n      formSubmitting: false,\n      brand: brand,\n      locale: locale,\n      subscriber: {\n        subscriberId: subscriberId,\n        subscriberKey: subscriberKey,\n        emailAddress: emailAddress,\n        jobId: jobId,\n        preferences: []\n      }\n    }\n  },\n  beforeMount() {\n    this.getPreferenceChannels();\n  },\n  mounted() {\n    this.debug && this.debugData();\n    this.getExistingPreferences();\n  },\n  methods: {\n    debugData() {\n      console.log({\n        config: this.applicationConfiguration,\n        preferenceOptions: this.preferenceOptions\n      })\n    },\n    getPreferenceChannels(preferenceOptions) {\n      this.channels = Object.keys(this.preferenceOptions.channels)\n    },\n    getDefaultChannelSelection() {\n      const channels = this.channels;\n      this.channelSelection = channels[0];\n    },\n    async getExistingPreferences() {\n      try {\n        const subscriberId = this.subscriber.subscriberId;\n        const emailAddress = this.subscriber.emailAddress;\n        const submitRequest = await axios.post(`${this.apiBaseURL}getCurrentPreferences`, {\n          subscriberId,\n          channels: this.channels,\n          emailAddress\n        })\n\n        if (submitRequest.data.Status === 'OK') {\n          this.subscriber.preferences = submitRequest.data.Results;\n        }\n\n      } catch (err) {\n        console.log(err)\n      }\n    },\n    onUpdateDarkMode() {\n      this.darkMode = !this.darkMode\n    },\n    onUpdateChannelSelection($event) {\n      this.channelSelection = $event\n    },\n    async onSubmitPreferenceForm($event) {\n      try {\n        console.log($event)\n        const channels = this.channels;\n        const postData = [];\n\n        for (const c in channels) {\n          const channel = channels[c];\n          let channelProperties = new Array();\n          let unsubscribe = $event[channel]['unsubscribe']['unsubscribed'];\n\n\n          if ($event[channel]['unsubscribe']['hasUpdatedValues']) {\n            channelProperties.push({\n              Name: 'statusUpdatedDate',\n              Value: new Date()\n            })\n          }\n\n          if (Object.prototype.hasOwnProperty.call($event, 'profile')) {\n            const profileData = $event.profile;\n            if (profileData.hasUpdatedValues) {\n              channelProperties.push({\n                Name: 'profileUpdatedDate',\n                Value: new Date()\n              })\n\n\n              for (const pro in profileData) {\n                channelProperties.push({\n                  Name: pro,\n                  Value: profileData[pro]\n                })\n              }\n            }\n          }\n\n\n          if (Object.prototype.hasOwnProperty.call($event[channel], 'preferences')) {\n            const preferenceData = $event[channel]['preferences'];\n\n            if (preferenceData.hasUpdatedValues) {\n              channelProperties.push({\n                Name: 'preferenceUpdatedDate',\n                Value: new Date()\n              })\n\n              for (const pre in preferenceData) {\n                let preferenceValue = preferenceData[pre]\n\n                channelProperties.push({\n                  Name: pre,\n                  Value: preferenceValue\n                })\n              }\n            }\n\n          }\n\n          if (Object.prototype.hasOwnProperty.call($event[channel], 'subscriptions')) {\n            const subscriptionObject = $event[channel]['subscriptions'];\n            const subscriptionsData = subscriptionObject.subscriptions;\n\n            if (subscriptionObject.hasUpdatedValues) {\n              channelProperties.push({\n                Name: 'subscriptionsUpdatedDate',\n                Value: new Date()\n              })\n\n              let subscriptions = ''\n              for (const sub of subscriptionsData) {\n                subscriptions += `${sub}|`\n              }\n\n              subscriptions = subscriptions.substring(0, subscriptions.length - 1)\n              channelProperties.push({\n                Name: 'subscriptions',\n                Value: subscriptions\n              })\n\n            }\n          }\n\n          if ($event[channel]['unsubscribe']['hasUpdatedValues']) {\n            channelProperties.push({\n              Name: 'unsubscribed',\n              Value: unsubscribe\n            })\n          }\n\n          if (\n            $event[channel]['subscriptions']['hasUpdatedValues'] ||\n            $event[channel]['preferences']['hasUpdatedValues'] ||\n            $event[channel]['unsubscribe']['hasUpdatedValues'] ||\n            $event['profile']['hasUpdatedValues']\n          ) {\n            channelProperties.push(\n              {\n                Name: 'subscriberId',\n                Value: this.subscriber.subscriberId\n              },\n              {\n                Name: 'emailAddress',\n                Value: this.subscriber.emailAddress\n              },\n              {\n                Name: 'channel',\n                Value: channel\n              })\n          }\n\n          let propertyArray = channelProperties.map(prop => prop.Name !== 'hasUpdatedValues' && prop)\n\n          console.log(propertyArray)\n          \n          if (propertyArray.length) {\n            postData.push(propertyArray.filter(Boolean))\n          }\n\n          channelProperties = [];\n        }\n\n        if (postData.length === 1) {\n          const isEmailChannel = postData[0].filter((obj) => obj.Value === 'email')\n          if (isEmailChannel) {\n            let preference = postData[0].filter((obj) => obj.Name === 'preference')\n            let subscriptions = postData[0].filter((obj) => obj.Name === 'subscriptions')\n\n            preference = preference.length && preference[0].Value.toLowerCase();\n            subscriptions = subscriptions.length && subscriptions[0].Value.toLowerCase();\n\n            if (preference && preference.includes('unsubscribe') || subscriptions && subscriptions.includes('unsubscribe')) {\n              unsubscribe = true;\n            }\n          }\n        }\n\n        const submitRequest = await axios.post(`${this.apiBaseURL}submitPreferenceForm`, {\n          postData,\n          subscriber: {\n            emailAddress,\n            subscriberKey,\n            subscriberId,\n            jobId\n          }\n        })\n\n\n        console.log(submitRequest)\n        if (submitRequest.data.updatePreferences && submitRequest.data.updatePreferences.Status === 'OK') {\n          Vue.$toast.success(`Thank you for updating your preferences!`)\n          this.getExistingPreferences();\n        } else {\n          Vue.$toast.error(`There was an error with your request.`)\n        }\n\n\n        if (submitRequest.data.unsubscribe && submitRequest.data.unsubscribe.Status === 'OK') {\n          if (submitRequest.data.unsubscribe.action && submitRequest.data.unsubscribe.action === 'unsubscribe') {\n            Vue.$toast.success(`You have been unsubscribed.`)\n          } else {\n            Vue.$toast.success(`You have been subscribed.`)\n          }\n          this.getExistingPreferences();\n        } else {\n          if (submitRequest.data.unsubscribe.action && submitRequest.data.unsubscribe.action === 'unsubscribe') {\n            Vue.$toast.error(`There was an error unsubscribing.`)\n          } else {\n            Vue.$toast.error(`There was an error subscribing.`)\n          }\n        }\n\n\n      } catch (err) {\n        console.log(err)\n        Vue.$toast.error(`There was an error: [${err.message}]`)\n      }\n    }\n  },\n  computed: {\n    apiBaseURL() {\n      return `${this.applicationConfiguration.apiBaseURL}?brand=${this.brand}&locale=${this.locale}&action=`\n    },\n    branding() {\n      if (this.applicationConfiguration.branding.supportDarkMode && this.darkMode) {\n        return this.applicationConfiguration.branding.dark\n      }\n\n      return this.applicationConfiguration.branding.default\n    }\n  }\n})",
+        "id": 137273,
+        "customerKey": "e0a36ce8-efaa-4cc7-9440-88bd41125a0f"
+      },
+      {
+        "bldrId": "898ad7fe-d0e6-4e67-9dbb-4924484eea28",
+        "name": "channel_drawer",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116669,
+          "name": "components",
+          "parentId": 116668,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components"
+        },
+        "content": "/*\nWhat is this component?\n*/\nVue.component('channel-drawer', {\n  props: {\n    preferenceOptions: Object,\n    branding: Object,\n    channels: Array\n  },\n  methods: {\n    getChannelIcon: function (channel, preferenceOptions) {\n      return this.preferenceOptions['channels'][channel]['icon']\n    }\n  },\n  data() {\n    return {\n      right: null,\n    }\n  },\n  template: `\n  <div \n    v-if=\"channels.length > 1\"\n  >\n    <v-navigation-drawer \n      permanent\n      max-height=\"100vh\"\n      height=\"80vh\"\n    >\n      <v-list dense nav>\n        <v-list-item v-for=\"channel in channels\" :key=\"channel\"  @click=\"$emit('update-channel-selection', channel)\" link>\n          <v-list-item-icon>\n            <v-icon\n              large\n              :color=\"branding.colors.accent\"\n            >{{ getChannelIcon(channel, this.preferenceOptions) }}</v-icon>\n          </v-list-item-icon>\n\n          <v-list-item-content>\n            <v-list-item-title class=\"text-h6 mb-8\">{{ channel }}</v-list-item-title>\n          </v-list-item-content>\n        </v-list-item>\n      </v-list>\n    </v-navigation-drawer>\n</div>\n`\n})",
+        "id": 137274,
+        "customerKey": "45672cf6-450d-4dd4-aa1b-349d6880947a"
+      },
+      {
+        "bldrId": "7b6baf70-f69f-4a01-afd2-67cd81bc332c",
+        "name": "branding_bar",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116669,
+          "name": "components",
+          "parentId": 116668,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components"
+        },
+        "content": "/*\nWhat is this component?\n*/\nVue.component('branding-bar', {\nprops: {\nbranding: Object,\napplicationConfiguration: Object\n},\nmounted() {\n\n},\ndata() {\nreturn {\ndarkModeToggle: false\n}\n},\nwatch: {\n\n},\nmethods: {\n\n},\ntemplate: `\n<div>\n  <v-card>\n    <v-app-bar :color=\"branding.colors.paper\" position=\"absolute\" height=\"100\">\n      <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->\n\n      <v-toolbar-title>\n        <v-img height=\"100%\" width=\"auto\" :src=\"branding.logo\"></v-img>\n      </v-toolbar-title>\n\n      <v-spacer></v-spacer>\n      \n      <v-switch v-show=\"branding.supportDarkMode\" :color=\"branding.colors.accent\" @click=\"$emit('update-dark-mode')\" v-model=\"darkModeToggle\">\n        <template v-slot:label>\n          <v-icon v-if=\"darkModeToggle\" large color=\"#F5F5F5\">\n            mdi-moon-waxing-crescent\n          </v-icon>\n          <v-icon v-else large color=\"#616161\">\n            mdi-white-balance-sunny\n          </v-icon>\n        </template>\n      </v-switch>\n\n    </v-app-bar>\n  </v-card>\n</div>\n`\n})",
+        "id": 137275,
+        "customerKey": "03770c79-b182-41cf-9013-43308e914445"
+      },
+      {
+        "bldrId": "ffdc0793-808e-430b-92dd-3046058b26db",
+        "name": "preference_form",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116669,
+          "name": "components",
+          "parentId": 116668,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components"
+        },
+        "content": "\n/*\nWhat is this component?\n*/\nVue.component('preference-form', {\n  props: {\n    branding: Object,\n    preferenceOptions: Object,\n    channels: Array,\n    channelSelection: String,\n    formSubmitting: Boolean,\n    subscriberPreferences: Array\n  },\n  beforeMount() {\n    this.setFormInputSchema();\n    this.setProfileFormSchema();\n    this.setPreferenceFormSchema();\n    this.setSubscriptionFormSchema();\n\n    this.setFormInputValues('preferences')\n    this.setFormInputValues('subscriptions')\n    this.setFormInputValues('unsubscribe')\n  },\n  data() {\n    return {\n      oneClickUnsub: false,\n      profileFormSchema: [],\n      preferenceFormSchema: [],\n      subscriptionFormSchema: [],\n      formInputs: {}\n    }\n  },\n  methods: {\n    async oneClickSubscribe() {\n      this.formInputs[this.channelSelection]['unsubscribe'] = {\n        unsubscribed: false,\n        hasUpdatedValues: this.subscriberPreferences[0].unsubscribed === true || this.subscriberPreferences[0].unsubscribed === 'True' ? true : false\n      };\n\n      await this.setFormInputValues('subscriptions', true)\n      await this.setFormInputValues('preference', true)\n      await this.submitPreferenceForm()\n      await this.setFormInputValues('preferences')\n      await this.setFormInputValues('subscriptions')\n    },\n    async oneClickUnsubscribe() {\n      this.formInputs[this.channelSelection]['unsubscribe'] = {\n        unsubscribed: true,\n        hasUpdatedValues: this.subscriberPreferences[0].unsubscribed === false || this.subscriberPreferences[0].unsubscribed === 'False' ? true : false\n      };\n\n      await this.setFormInputValues('subscriptions', true)\n      await this.setFormInputValues('preference', true)\n      await this.submitPreferenceForm()\n      await this.setFormInputValues('preferences')\n      await this.setFormInputValues('subscriptions')\n    },\n    submitPreferenceForm() {\n      const channels = this.channels;\n      let emit = this.formInputs\n      emit.profile.hasUpdatedValues = this.checkForUpdatedValues(emit.profile, this.channelPreferences)\n\n      for (const c in channels) {\n        const channel = channels[c];\n        const channelPreferences = this.setChannelPreferences(channel);\n        const subscriptions = channelPreferences.subscriptions.split(\"|\")\n        emit[channel]['unsubscribe']['hasUpdatedValues'] = this.checkForUpdatedValues(emit[channel]['unsubscribe'], channelPreferences)\n\n        if (emit[channel]['preferences']['preference']) {\n          emit[channel]['preferences']['hasUpdatedValues'] = this.checkForUpdatedValues(emit[channel]['preferences'], channelPreferences)\n        }\n\n        if (emit[channel]['subscriptions']['subscriptions'].length) {\n          emit[channel]['subscriptions']['hasUpdatedValues'] = this.checkForUpdatedValues(emit[channel]['subscriptions'].subscriptions, subscriptions)\n        }\n      }\n\n\n      this.$emit('submit-preference-form', emit)\n    },\n    checkForUpdatedValues(updateObject, existingObject) {\n\n      for (const u in updateObject) {\n        const updatedProfileValue = updateObject[u];\n        const existingProfileValue = existingObject[u];\n\n        if (u !== 'hasUpdatedValues') {\n          if (updatedProfileValue !== existingProfileValue) {\n            return true;\n          }\n        }\n      }\n\n      return false;\n    },\n    setProfileFormSchema() {\n      if (Object.prototype.hasOwnProperty.call(this.preferenceOptions, 'profile')) {\n        let profileSchema = []\n\n        if (\n          Object.prototype.hasOwnProperty.call(this.preferenceOptions.profile, 'inputs')\n        ) {\n          const profileData = this.preferenceOptions.profile.inputs;\n\n          for (const pro in profileData) {\n            let inputObject = profileData[pro];\n\n            this.formInputs['profile'][inputObject.name] = this.channelPreferences[inputObject.name] ? this.channelPreferences[inputObject.name] : '';\n\n            profileSchema.push(inputObject)\n          }\n        }\n\n        this.profileFormSchema = profileSchema\n      }\n    },\n    setPreferenceFormSchema() {\n      if (Object.prototype.hasOwnProperty.call(this.preferenceChannelConfiguration, 'preferences')) {\n        let preferenceSchema = []\n\n        if (\n          Object.prototype.hasOwnProperty.call(this.preferenceChannelConfiguration['preferences'], 'radios')\n        ) {\n          preferenceSchema.push({\n            \"name\": \"preference\",\n            \"type\": \"radio\",\n            \"options\": this.preferenceChannelConfiguration['preferences']['radios']\n          })\n        }\n\n        this.preferenceFormSchema = preferenceSchema\n      }\n    },\n    setSubscriptionFormSchema() {\n      if (Object.prototype.hasOwnProperty.call(this.preferenceChannelConfiguration, 'subscriptions')) {\n        let subscriptionSchema = []\n\n        if (!Object.prototype.hasOwnProperty.call(this.formInputs[channelSelection], 'subscriptions')) {\n          this.formInputs[channelSelection]['subscriptions'] = {};\n        }\n\n\n        if (\n          Object.prototype.hasOwnProperty.call(this.preferenceChannelConfiguration['subscriptions'], 'checkboxes')\n        ) {\n          subscriptionSchema.push({\n            \"name\": \"subscriptions\",\n            \"type\": \"checkbox\",\n            \"options\": this.preferenceChannelConfiguration['subscriptions']['checkboxes']\n          })\n        }\n\n        this.subscriptionFormSchema = subscriptionSchema\n      }\n    },\n    setFormInputSchema() {\n      this.formInputs = {\n        profile: {}\n      };\n\n      this.channels.forEach(channel => {\n        this.formInputs[channel] = {}\n      })\n    },\n    setFormInputValues(objectKey, reset = false) {\n      const channels = this.channels;\n\n      for (const c in channels) {\n        switch (objectKey) {\n          case 'preferences':\n            if (!Object.prototype.hasOwnProperty.call(this.formInputs[channels[c]], 'preferences')) {\n              this.formInputs[channels[c]]['preferences'] = {};\n            }\n\n            this.formInputs[channels[c]]['preferences']['preference'] = this.setChannelPreferences(channels[c])['preference'];\n\n            if (reset) {\n              this.formInputs[channels[c]]['preferences']['preference'] = '';\n            }\n            break;\n          case 'subscriptions':\n            if (!Object.prototype.hasOwnProperty.call(this.formInputs[channels[c]], 'subscriptions')) {\n              this.formInputs[channels[c]]['subscriptions'] = {};\n            }\n\n            this.formInputs[channels[c]]['subscriptions']['subscriptions'] = this.setChannelPreferences(channels[c])['subscriptions'].split(\"|\") || [];\n\n            if (reset) {\n              this.formInputs[channels[c]]['subscriptions']['subscriptions'] = [];\n            }\n\n            break;\n          case 'unsubscribe':\n            if (!Object.prototype.hasOwnProperty.call(this.formInputs[channels[c]], 'unsubscribe')) {\n              this.formInputs[channels[c]]['unsubscribe'] = {\n                unsubscribed: false\n              };\n            }\n\n            this.formInputs[channels[c]]['unsubscribe']['unsubscribed'] = this.setChannelPreferences(channels[c])['unsubscribed'];\n\n            break;\n        }\n      }\n\n    },\n    setChannelPreferences(channel) {\n      if (this.subscriberPreferences.length) {\n        return this.subscriberPreferences.find((pref) => pref.channel === channel)\n      }\n    }\n  },\n  watch: {\n    channelSelection: function (newVal, oldVal) {\n      this.setProfileFormSchema();\n      this.setPreferenceFormSchema();\n      this.setSubscriptionFormSchema();\n    }\n  },\n  computed: {\n    selectionLength() {\n      if (this.preferenceFormSchema.length && this.subscriptionFormSchema.length) {\n        return 4\n      }\n\n      return 8\n    },\n    preferenceChannelConfiguration() {\n      if (this.channelSelection) {\n        return this.preferenceOptions['channels'][this.channelSelection]\n      }\n    },\n    channelPreferences() {\n      if (this.channelSelection) {\n        return this.subscriberPreferences.find((pref) => pref.channel === this.channelSelection)\n      }\n    },\n  },\n  template: `\n<section>\n\n  <!-- Profile Input Section -->\n  <v-row v-if=\"profileFormSchema\" class=\"flex\">\n    <v-col cols=\"12\" class=\"justify-center\">\n      <h2 v-if=\"preferenceChannelConfiguration.profile && preferenceChannelConfiguration.profile.headline\">{{preferenceChannelConfiguration.profile.headline}}</h2>\n      <span v-if=\"preferenceChannelConfiguration.profile && preferenceChannelConfiguration.profile.copy\" v-html=\"preferenceChannelConfiguration.profile.copy\"></span>\n      <div v-show=\"preferenceOptions.profile.inputs\">\n        <formulate-form :values=\"formInputs['profile']\" v-model=\"formInputs['profile']\" :schema=\"profileFormSchema\" />\n      </div>\n    </v-col>\n  </v-row>\n\n  <v-row>\n    <v-col cols=\"12\" md=\"8\">\n      <h3>{{channelPreferences.emailAddress}}</h3>\n      <h5 v-if=\"channelPreferences.unsubscribed === 'True'\">Current Status: unsubscribed</h5>\n      <h5 v-else>Current Status: active</h5>\n      <v-divider class=\"my-5\"></v-divider>\n    </v-col>\n  </v-row>\n\n  <v-row class=\"flex\">\n\n    <!-- Preference Radio Selection Section -->\n    <v-col v-if=\"preferenceFormSchema.length\" cols=\"12\" :md=\"selectionLength\" class=\"mb-xs-4 mb-md-0\">\n      <div v-show=\"channelSelection\">\n        <h2 v-if=\"preferenceChannelConfiguration.preference && preferenceChannelConfiguration.preference.headline\">{{preferenceChannelConfiguration.preference.headline}}</h2>\n        <span v-if=\"preferenceChannelConfiguration.preference && preferenceChannelConfiguration.preference.copy\" v-html=\"preferenceChannelConfiguration.preference.copy\"></span>\n        <formulate-form :values=\"formInputs[channelSelection]['preferences']\" v-model=\"formInputs[channelSelection]['preferences']\" :schema=\"preferenceFormSchema\" />\n      </div>\n    </v-col>\n\n    <!-- Subscription Checkbox Selection Section -->\n    <v-col v-if=\"subscriptionFormSchema.length\" cols=\"12\" :md=\"selectionLength\">\n      <div v-show=\"channelSelection\">\n        <h2 v-if=\"preferenceChannelConfiguration.subscriptions && preferenceChannelConfiguration.subscriptions.headline\">{{preferenceChannelConfiguration.subscriptions.headline}}</h2>\n        <span v-if=\"preferenceChannelConfiguration.subscriptions && preferenceChannelConfiguration.subscriptions.copy\" v-html=\"preferenceChannelConfiguration.subscriptions.copy\"></span>\n        <formulate-form :values=\"formInputs[channelSelection]['subscriptions']\" v-model=\"formInputs[channelSelection]['subscriptions']\" :schema=\"subscriptionFormSchema\" />\n      </div>\n    </v-col>\n  </v-row>\n\n  <v-row>\n    <v-col cols=\"12\" md=\"8\">\n      <v-btn class=\"ma-2\" v-if=\"channelPreferences.unsubscribed === 'False'\" :loading=\"formSubmitting\" :disabled=\"formSubmitting\" color=\"info\" @click=\"oneClickUnsubscribe\">\n        Unsubscribe From All\n        <template v-slot:loader>\n          <span class=\"custom-loader\">\n            <v-icon light>mdi-cached</v-icon>\n          </span>\n        </template>\n      </v-btn>\n\n      <v-btn class=\"ma-2\" v-else :loading=\"formSubmitting\" :disabled=\"formSubmitting\" color=\"info\" @click=\"oneClickSubscribe\">\n        Subscribe To All\n        <template v-slot:loader>\n          <span class=\"custom-loader\">\n            <v-icon light>mdi-cached</v-icon>\n          </span>\n        </template>\n      </v-btn>\n\n\n      <!-- <v-btn class=\"ma-2\" :loading=\"formSubmitting\" :disabled=\"formSubmitting\" color=\"info\" @click=\"submitPreferenceForm\">\n        Submit Updates\n        <template v-slot:loader>\n          <span class=\"custom-loader\">\n            <v-icon light>mdi-cached</v-icon>\n          </span>\n        </template>\n      </v-btn> -->\n    </v-col>\n  </v-row>\n</section>\n`\n})",
+        "id": 137276,
+        "customerKey": "03f4431b-3a13-4f60-89d6-9460b7edfcaf"
+      },
+      {
+        "bldrId": "8111eb7f-60e2-45f1-a170-d813d92867ff",
+        "name": "submit_button_animation",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116670,
+          "name": "styles",
+          "parentId": 116668,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/styles"
+        },
+        "content": "<style>\n  .custom-loader {\n    animation: loader 1s infinite;\n    display: flex;\n  }\n  @-moz-keyframes loader {\n    from {\n      transform: rotate(0);\n    }\n    to {\n      transform: rotate(360deg);\n    }\n  }\n  @-webkit-keyframes loader {\n    from {\n      transform: rotate(0);\n    }\n    to {\n      transform: rotate(360deg);\n    }\n  }\n  @-o-keyframes loader {\n    from {\n      transform: rotate(0);\n    }\n    to {\n      transform: rotate(360deg);\n    }\n  }\n  @keyframes loader {\n    from {\n      transform: rotate(0);\n    }\n    to {\n      transform: rotate(360deg);\n    }\n  }\n</style>",
+        "id": 137277,
+        "customerKey": "c246ec32-f840-4ee7-a019-5819ea0c61ff"
+      },
+      {
+        "bldrId": "b2ed6a8e-c811-47a7-8bf8-350dc730e81d",
+        "name": "wsProxy",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116672,
+          "name": "ssjs",
+          "parentId": 116671,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/lib/ssjs"
+        },
+        "content": "<script runat=\"server\">\n  Platform.Load(\"core\", \"1.1\");\n\n  function wsProxy() {\n    var prox = new Script.Util.WSProxy();\n    var fn = {};\n\n    /*******************************\n     * @config {<Object>}\n     * @continueRequest {Boolean}\n     * @return {Array}\n     ******************************/\n    fn.retrieve = function (config, continueRequest) {\n\n      var reqID;\n      var moreData = true;\n      var continueRequest = continueRequest ? continueRequest : false;\n      var obj = config.soapObjName ? config.soapObjName : null;\n      var opts = config.opts ? config.opts : {};\n      var props = config.props ? config.props : {};\n      var filter = config.filter ? config.filter : {};\n      var cols = config.cols ? config.cols : null;\n      var mid = config.mid ? config.mid : null;\n      // prox = mid ? util.proxyContext(prox, mid) : prox;\n\n      if (!config) { return 'configuration required'; }\n      if (!obj) { return 'SOAP object is required'; }\n\n      var resultsOut = [];\n\n      var data = prox.retrieve(obj, cols, filter, opts, props)\n\n      return data\n\n    } // end retrieve\n\n    /*******************************\n     * @config {Object}\n     * @return {Object}\n     ******************************/\n    fn.update = function (config) {\n      var obj = config.soapObjName ? config.soapObjName : null;\n      var payload = config.payload ? config.payload : null;\n      var options = config.options ? config.options : null;\n      var mid = config.mid ? config.mid : null;\n      // prox = mid ? utils.proxyContext(prox, mid) : prox;\n\n      if (!config) { return 'configuration required'; }\n      if (!obj) { return 'SOAP object is required'; }\n      if (!payload) { return 'payload is required'; }\n\n      var batch = fns.utils.isArray(payload)\n\n      if (batch) {\n        var res = prox.updateBatch(obj, payload, options);\n      } else {\n        var res = prox.updateItem(obj, payload, options);\n      }\n\n      return res;\n    } // end update\n\n\n    return fn\n  }\n\n</script>",
+        "id": 137278,
+        "customerKey": "2da2b7a7-2d06-46ed-a67e-9dcb814b1a40"
+      },
+      {
+        "bldrId": "c6c91d78-0e7c-4e64-8bed-fa2bc4610af4",
+        "name": "subscriber_validation",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116673,
+          "name": "validation",
+          "parentId": 116671,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/lib/validation"
+        },
+        "content": "%%[\nset @subscriberkey = AttributeValue(\"_subscriberkey\")\nset @subscriberid = AttributeValue(\"subscriberid\")\nset @emailAddress = AttributeValue(\"emailaddr\")\nset @jobid = AttributeValue(\"jobid\")\n]%%\n\n<script runat=\"server\">\n  Platform.Load(\"core\", \"1.1\");\n\n  var subscriberKey = Stringify(Variable.GetValue(\"@subscriberkey\"));\n  var emailAddress = Stringify(Variable.GetValue(\"@emailAddress\"));\n  var subscriberId = Variable.GetValue(\"@subscriberid\");\n  var jobId = Variable.GetValue(\"@jobid\");\n\n  var brand = Platform.Request.GetQueryStringParameter('brand');\n  var locale = Platform.Request.GetQueryStringParameter('locale');\n\n  var configPath = 'Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\configurations' + '\\\\ ' + brand + '\\\\ ' + locale\n  var applicationConfigurationPath = configPath + '\\\\app_configuration'\n  applicationConfigurationPath = applicationConfigurationPath.replace(/(?<=\\\\)\\ /g, '')\n\n  var applicationConfiguration = Platform.Function.ContentBlockByName(applicationConfigurationPath)\n  var applicationConfigurationJSON = Platform.Function.ParseJSON(applicationConfiguration)\n  var map = applicationConfigurationJSON.map;\n\n  Platform.Function.ContentBlockByName(map.content_block.ssjs.utils)\n\n  var fns = {\n    utils: util()\n  }\n\n  var authorized = 0;\n  if (subscriberId && jobId) {\n    if (subscriberId !== 0 && jobId !== 0) {\n      authorized = 1;\n    }\n  }\n</script>",
+        "id": 137279,
+        "customerKey": "17d6ca19-4ae6-452e-83d1-c4e5488a7168"
+      },
+      {
+        "bldrId": "cec8d97a-f694-4906-bd94-6a8891310a52",
+        "name": "unauthorized_user",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116669,
+          "name": "components",
+          "parentId": 116668,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components"
+        },
+        "content": "/*\nWhat is this component?\n*/\nVue.component('unauthorized-user', {\nprops: {\n  unauthorized: Object,\n  branding: Object,\n  brand: String\n},\nmounted() {\n\n},\ndata() {\nreturn {\n\n}\n},\nwatch: {\n\n},\nmethods: {\n\n},\ntemplate: `\n<v-col cols=\"10\" class=\"flex text-center mx-auto\">\n  <v-row justify=\"space-around\">\n    <v-icon :color=\"branding.colors.accent\" size=\"200\" aria-label=\"My Account\" role=\"img\" aria-hidden=\"false\">\n      {{unauthorized.icon}}\n    </v-icon>\n  </v-row>\n  <v-row justify=\"space-around\">\n    <v-col cols=\"8\" class=\"text-h6 text-md-h5\">\n      <span v-html=\"unauthorized.copy\"></span>\n    </v-col>\n  </v-row>\n\n</v-col>\n`\n})",
+        "id": 137280,
+        "customerKey": "98ddacf6-3998-43ed-8242-bb8c79acd7d8"
+      },
+      {
+        "bldrId": "69f852b0-e5c0-419d-ba07-3ace0496f41e",
+        "name": "utils",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116672,
+          "name": "ssjs",
+          "parentId": 116671,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/lib/ssjs"
+        },
+        "content": "<script runat=\"server\">\n  Platform.Load(\"core\", \"1.1.1\");\n\n  function util() {\n    var fn = {}\n\n    fn.isArray = function (arg) {\n      return Object.prototype.toString.call(arg) === '[object Array]';\n    }\n\n\n    fn.response = function (arg) {\n      Write(Stringify(arg))\n    }\n\n\n    fn.proxyContext = function (prox, mid) {\n      if (mid) {\n        //reset previous settings\n        prox.resetClientIds();\n        // Set ClientID \n        prox.setClientId({\n          \"ID\": mid\n        });\n      }\n      return prox\n    }\n\n\n    fn.deBug = function (action, response, logExtKey, debug) {\n      if (response) {\n        debug ? Write(\"<br><b>\" + action + \":</b><br> \" + Stringify(response) + \"<br><br>\") : null;\n      } else {\n        debug ? Write(\"<br><b>\" + action + \"</b><br> \") : null;\n      }\n\n      if (logExtKey) {\n        var log = {\n          action: action ? action : null,\n          log: response ? response : null\n        }\n\n        addLog(log, logExtKey);\n      }\n    }\n\n\n    /***********************************************\n     *\n     *   function addLog()\n     *   Pushes logging object to array to be written to a Data Extension\n     *   \n     *    @param obj {Object} logging object that matches the data extension\n     *    @param logExtKey {String} External Key to log records to\n     *    \n     ***********************************************/\n    fn.addLog = function (obj, logExtKey) {\n      var logDE = DataExtension.Init(logExtKey);\n      var logAction = logDE.Rows.Add(obj);\n    };\n\n\n\n    /*\n      getDERecords Function\n       Retrieves rows from a Data Extension\n       \n        Dependencies:\n           - DEData Function\n        @config {object} object with payload for wsProxy call\n       \n       //Sample Usage\n       \n       var config = {\n         deName: \"Data Extension Name\",\n         col: [],\n         filter: {\n           Property: \"EmailAddress\",\n           SimpleOperator: \"isNotNull\",\n           Value: \"\"\n         },\n         opts: {\n           BatchSize: 10\n         }\n       };\n           \n       var data = getDERecords(config);\n       \n       //optional//\n       If only specific fields are needed, add a cols array of those fields.\n       When no cols key is included, function will get all fields.\n       \n       var config = {\n         deName: \"Data Extension Name\",\n         cols: [\"EmailAddress\", \"SubscriberKey\"]\n         filter: {\n           Property: \"EmailAddress\",\n           SimpleOperator: \"isNotNull\",\n           Value: \"\"\n         },\n         opts: {\n           BatchSize: 10\n         }\n       };\n       \n    */\n    fn.getDERecords = function (config, fns) {\n\n      var deConfig = {\n        soapObjName: \"DataExtensionObject[\" + config.dataExtensionKey + \"]\"\n      };\n\n      deConfig.cols = config.cols.length > 0 ? config.cols : fns.utils.getFieldNames(config.dataExtensionKey);\n      if (config.filter) { deConfig.filter = config.filter; };\n      if (config.opts) { deConfig.opts = config.opts; };\n\n      var deRecords = fns.wsProxy.retrieve(deConfig);\n      return deRecords;\n    };\n\n\n\n\n    /***********************************************\n    *\n    *   function getFieldNames()\n    *   Gets all columns from a SOAP Object\n    *\n    *    @peram {deName} Name of DataExtension to get columns\n    *\n    *    @output {array} array of fields\n    *\n    ***********************************************/\n\n    fn.getFieldNames = function (dataExtensionKey) {\n      var de = DataExtension.Init(dataExtensionKey);\n      var fields = de.Fields.Retrieve();\n\n      fields.sort(function (a, b) { return (a.Ordinal > b.Ordinal) ? 1 : -1 });\n\n      var out = [];\n\n      for (k in fields) {\n        out = out.concat(fields[k].Name);\n      }\n\n      return out;\n\n    } //End retrieveFieldNames\n\n\n    /***********************************************\n    *\n    *   function formatResult()\n    *   Takes Objects that are Name/Value pairs {Name: \"Key\", Value: \"Value\"} and\n    *   normalizes them to a standard JSON object {key: \"value\"}\n    *\n    *    @peram {arr} array to normalize\n    *    @peram {prop} property key of Array\n    *\n    *    @output Array of normalized JSON object\n    *\n    ***********************************************/\n    fn.formatResult = function (arr, prop) {\n      var results = [];\n      for (var i = 0; i < arr.length; i++) {\n        var result_list = arr[i][prop];\n        var obj = {};\n        for (k in result_list) {\n          var key = result_list[k].Name;\n          var val = result_list[k].Value\n          if (key.indexOf(\"_\") != 0) obj[key] = val;\n        }\n        results.push(obj);\n      }\n      return results;\n    };\n\n\n    fn.getSubscriberStatus = function (subscriberId, fns) {\n      try {\n        var subscriberStatusConfig = {\n          soapObjName: 'Subscriber',\n          cols: ['Status'],\n          filter: {\n            Property: 'ID',\n            SimpleOperator: 'equals',\n            Value: subscriberId\n          }\n        }\n\n        var subscriber = fns.wsProxy.retrieve(subscriberStatusConfig)\n\n        if(subscriber.Status === 'OK'){\n          return subscriber.Results[0].Status\n        }\n\n        return 0\n      } catch (err) {\n        return err\n      }\n    }\n\n\n    fn.getAllSubscribersListID = function (fns) {\n      try {\n        var allsubsConfig = {\n          soapObjName: 'List',\n          cols: ['ID'],\n          filter: {\n            Property: 'ListName',\n            SimpleOperator: 'equals',\n            Value: 'All Subscribers'\n          }\n        }\n\n        var allSubsReq = fns.wsProxy.retrieve(allsubsConfig)\n\n        if (allSubsReq.Status === 'OK') {\n          return allSubsReq.Results[0].ID\n        }\n\n        return 0\n\n      } catch (err) {\n        return err\n      }\n    }\n\n\n    fn.toggleUnsubscribe = function (unsubEvent, currentStatus, fns) {\n      try {\n        var out;\n\n        if (unsubEvent.unsubscribed === true && currentStatus === 'Active') {\n          var prox = new Script.Util.WSProxy();\n          var props = [\n            { Name: \"SubscriberKey\", Value: unsubEvent.subscriberKey },\n            { Name: \"EmailAddress\", Value: unsubEvent.emailAddress },\n            { Name: \"JobID\", Value: unsubEvent.jobId },\n            { Name: \"ListID\", Value: unsubEvent.listId },\n            { Name: \"BatchID\", Value: 0 }\n          ];\n\n          out = prox.execute(props, \"LogUnsubEvent\");\n          out.action = 'unsubscribe'\n        } else if(unsubEvent.unsubscribed === false && currentStatus !== 'Active'){\n\n          var updateSubscriberStatusConfig = {\n            soapObjName: 'Subscriber',\n            options: {\n              SaveOptions: [{\n                PropertyName: \"*\",\n                SaveAction: \"UpdateAdd\"\n              }]\n            },\n            payload: {\n              SubscriberKey: unsubEvent.subscriberKey,\n              Status: 'Active',\n              Lists: [{\n                ID: unsubEvent.listId\n              }]\n            }\n          }\n\n          out = fns.wsProxy.update(updateSubscriberStatusConfig)\n          out.action = 'subscribe'\n\n        }\n        return out\n\n      } catch (err) {\n        return err\n      }\n    }\n\n    return fn\n  }\n\n</script>",
+        "id": 137281,
+        "customerKey": "421ec7c8-cb79-4243-819d-0f285eb479f6"
+      },
+      {
+        "bldrId": "2ca8d070-29a5-4922-a2fb-165fa21f1b34",
+        "name": "legal",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116669,
+          "name": "components",
+          "parentId": 116668,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components"
+        },
+        "content": "/*\nWhat is this component?\n*/\nVue.component('legal', {\nprops: {\nlegal: Object,\nbranding: Object\n},\nmounted() {\n\n},\ndata() {\nreturn {\n\n}\n},\nwatch: {\n\n},\nmethods: {\n\n},\ntemplate: `\n<v-row\n  class=\"mt-5\"\n>\n  <v-col cols=\"10\" class=\"flex text-center mx-auto\">\n    <v-divider class=\"my-4\"></v-divider>\n    <v-row justify=\"space-around\">\n      <v-col cols=\"8\" class=\"text-caption\">\n        <span v-html=\"legal.copy\"></span>\n      </v-col>\n    </v-row>\n\n  </v-col>\n</v-row>\n`\n})",
+        "id": 137282,
+        "customerKey": "df8617fd-f901-4d38-a5f7-76b3e030e73f"
+      },
+      {
+        "bldrId": "26e24fd9-992f-452d-a542-fcf75cb003cd",
+        "name": "app_configuration",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116676,
+          "name": "en-us",
+          "parentId": 116675,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/configurations/ikea_kitchen/en-us"
+        },
+        "content": "{\n  \"branding\": {\n    \"brandName\": \"Ikea Kitchen Services\",\n    \"websiteURL\": \"https://www.ikea.com/\",\n    \"supportDarkMode\": \"false\",\n    \"default\": {\n      \"logo\": \"https://www.ikea.com/us/en/static/ikea-logo.f7d9229f806b59ec64cb.svg\",\n      \"colors\": {\n        \"primary\": \"#00FFFF\",\n        \"secondary\": \"blue\",\n        \"accent\": \"yellow\",\n        \"paper\": \"#fff\"\n      }\n    },\n    \"dark\": {\n      \"logo\": \"\",\n      \"colors\": {\n        \"primary\": \"\",\n        \"secondary\": \"\",\n        \"accent\": \"\",\n        \"paper\": \"\"\n      }\n    }\n  },\n  \"map\": {\n    \"content_block\": {\n      \"preference_options\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\configurations\\\\preference_options\",\n      \"branding_bar\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\branding_bar\",\n      \"channel_drawer\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\channel_drawer\",\n      \"preference_form\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\preference_form\",\n      \"unauthorized_user\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\unauthorized_user\",\n      \"legal\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\legal\",\n      \"submit_button_animation\": \"'Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\styles\\\\submit_button_animation\",\n      \"app_js\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\app_js\",\n      \"ssjs\": {\n        \"wsProxy\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\lib\\\\ssjs\\\\wsProxy\",\n        \"utils\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\lib\\\\ssjs\\\\utils\"\n      }\n    },\n    \"data_extension\": {\n      \"preferenceCenterExternalKey\": \"B972F7FF-A6D3-4605-9019-3FD521EF1CD1\"\n    }\n  },\n  \"apiBaseURL\": \"https://mcygk-vddqb-fd5nvny1nslbbhgq.pub.sfmc-content.com/34oae0wqdi2\",\n  \"action_toggles\": {\n    \"unsubscribe\": true\n  }\n}",
+        "id": 137283,
+        "customerKey": "00db5bf6-4466-4d7a-b067-8c785786f962"
+      },
+      {
+        "bldrId": "2d13d6bd-062d-4fa3-9c50-4f404225b2b5",
+        "name": "preference_options",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116676,
+          "name": "en-us",
+          "parentId": 116675,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/configurations/ikea_kitchen/en-us"
+        },
+        "content": "{\n  \"profile\": {\n    \"headline\": \"\",\n    \"copy\": \"\",\n    \"inputs\": []\n  },\n  \"channels\": {\n    \"email\": {\n      \"icon\": \"mdi-email\",\n      \"subscriptions\": {\n        \"headline\": \"\",\n        \"copy\": \"Thank you for working with IKEA Kitchen Services. To update your communication preferences review the options below. Note that Unsubscribing includes all relevant marketing information, however customers will still receive required transactional information, such as payment receipts and service confirmations. Please review our <a href='https://traemand.com/privacy-policy/' target='_blank'>privacy policy</a> for information on how we use and process your data. <br><br> We will send you relevant marketing information and carry out market research about our products and services through email, phone (e.g. SMS, MMS, voice).\",\n        \"inputs\": [],\n        \"checkboxes\": []\n      }\n    }\n  },\n  \"unauthorized\": {\n    \"icon\": \"mdi-account-question\",\n    \"copy\": \"Looks like we can't find you in your system. <br> Please ensure you've reached this page from an Ikea email. <br><br> Visit <a href='https://www.ikea.com'>IKEA.com</a> to sign up for emails.\"\n  },\n  \"legal\": {\n    \"icon\": \"mdi-account-question\",\n    \"copy\": \"\"\n  }\n}\n",
+        "id": 137284,
+        "customerKey": "2aebce0d-7dc2-4a4e-9141-6b311e917222"
+      },
+      {
+        "bldrId": "93f3f5f5-926b-439f-8860-ea74076de070",
+        "name": "_component_imports",
+        "assetType": {
+          "id": 220,
+          "name": "codesnippetblock",
+          "displayName": "Code Snippet Block"
+        },
+        "category": {
+          "id": 116669,
+          "name": "components",
+          "parentId": 116668,
+          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components"
+        },
+        "content": "%%=TreatAsContent(ContentBlockByName('Content Builder\\BLDR_OneClick_Unsub_Pkg\\frontend\\styles\\submit_button_animation'))=%%\n%%=TreatAsContent(ContentBlockByName('Content Builder\\BLDR_OneClick_Unsub_Pkg\\lib\\validation\\subscriber_validation'))=%%\n\n<script runat=\"server\">\n  Platform.Load(\"core\", \"1.1.1\");\n\n  var brand = Platform.Request.GetQueryStringParameter('brand')\n  var locale = Platform.Request.GetQueryStringParameter('locale')\n\n  var configPath = 'Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\configurations' + '\\\\ ' + brand + '\\\\ ' + locale\n  var applicationConfigurationPath = configPath + '\\\\app_configuration'\n  var preferenceOptionsPath = configPath + '\\\\preference_options'\n\n  applicationConfigurationPath = applicationConfigurationPath.replace(/(?<=\\\\)\\ /g, '')\n  preferenceOptionsPath = preferenceOptionsPath.replace(/(?<=\\\\)\\ /g, '')\n\n  var applicationConfiguration = Platform.Function.ContentBlockByName(applicationConfigurationPath)\n  var preferenceOptions = Platform.Function.ContentBlockByName(preferenceOptionsPath)\n  var applicationConfigurationJSON = Platform.Function.ParseJSON(applicationConfiguration)\n  var map = applicationConfigurationJSON.map;\n\n  var channelDrawer = Platform.Function.ContentBlockByName(map.content_block.channel_drawer)\n  var preferenceForm = Platform.Function.ContentBlockByName(map.content_block.preference_form)\n  var unauthorizedUser = Platform.Function.ContentBlockByName(map.content_block.unauthorized_user)\n  var brandingBar = Platform.Function.ContentBlockByName(map.content_block.branding_bar)\n  var legal = Platform.Function.ContentBlockByName(map.content_block.legal)\n  var appJS = Platform.Function.ContentBlockByName(map.content_block.app_js)\n\n</script>\n\n%%=Concat('<sc','rip','t>')=%%\n\n  Vue.use(VueToast, {\n  position: 'top-right',\n  duration: 6000,\n  dismissable: true\n  });\n\n  Vue.use(VueFormulate)\n\n  const applicationConfiguration = <ctrl:var name=applicationConfiguration />\n  const preferenceOptions = <ctrl:var name=preferenceOptions />\n\n  const channelKeys = Object.keys(preferenceOptions.channels);\n  const channelSelection = channelKeys[0];\n\n  const isAuthorized = <ctrl:var name=authorized />\n  const subscriberId = <ctrl:var name=subscriberId />\n  const emailAddress = <ctrl:var name=emailAddress />\n  const subscriberKey = <ctrl:var name=subscriberKey />\n  const jobId = <ctrl:var name=jobId />\n  const brand = \"<ctrl:var name=brand />\"\n  const locale = \"<ctrl:var name=locale />\"\n\n  <ctrl:var name=appJS />\n  <ctrl:var name=brandingBar />\n  <ctrl:var name=channelDrawer />\n  <ctrl:var name=preferenceForm />\n  <ctrl:var name=unauthorizedUser />\n  <ctrl:var name=legal />\n\n  %%=Concat('</sc','rip','t>')=%%",
+        "dependencies": [
+          {
+            "context": "contentBuilder",
+            "ref": "ContentBlockByName",
+            "bldrId": "8111eb7f-60e2-45f1-a170-d813d92867ff"
+          },
+          {
+            "context": "contentBuilder",
+            "ref": "ContentBlockByName",
+            "bldrId": "c6c91d78-0e7c-4e64-8bed-fa2bc4610af4"
+          },
+          {
+            "context": "contentBuilder",
+            "ref": "ContentBlockByName",
+            "bldrId": "8111eb7f-60e2-45f1-a170-d813d92867ff"
+          },
+          {
+            "context": "contentBuilder",
+            "ref": "ContentBlockByName",
+            "bldrId": "c6c91d78-0e7c-4e64-8bed-fa2bc4610af4"
+          },
+          {
+            "context": "contentBuilder",
+            "ref": "ContentBlockByName",
+            "bldrId": "8111eb7f-60e2-45f1-a170-d813d92867ff"
+          },
+          {
+            "context": "contentBuilder",
+            "ref": "ContentBlockByName",
+            "bldrId": "c6c91d78-0e7c-4e64-8bed-fa2bc4610af4"
+          }
+        ],
+        "id": 137285,
+        "customerKey": "4a48e3f6-09da-4fc9-b8e1-c3653baceab2"
+      }
+    ]
+  }
+}

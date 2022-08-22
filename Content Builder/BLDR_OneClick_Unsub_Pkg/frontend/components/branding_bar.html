@@ -1,0 +1,50 @@
+/*
+What is this component?
+*/
+Vue.component('branding-bar', {
+props: {
+branding: Object,
+applicationConfiguration: Object
+},
+mounted() {
+
+},
+data() {
+return {
+darkModeToggle: false
+}
+},
+watch: {
+
+},
+methods: {
+
+},
+template: `
+<div>
+  <v-card>
+    <v-app-bar :color="branding.colors.paper" position="absolute" height="100">
+      <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+
+      <v-toolbar-title>
+        <v-img height="100%" width="auto" :src="branding.logo"></v-img>
+      </v-toolbar-title>
+
+      <v-spacer></v-spacer>
+      
+      <v-switch v-show="branding.supportDarkMode" :color="branding.colors.accent" @click="$emit('update-dark-mode')" v-model="darkModeToggle">
+        <template v-slot:label>
+          <v-icon v-if="darkModeToggle" large color="#F5F5F5">
+            mdi-moon-waxing-crescent
+          </v-icon>
+          <v-icon v-else large color="#616161">
+            mdi-white-balance-sunny
+          </v-icon>
+        </template>
+      </v-switch>
+
+    </v-app-bar>
+  </v-card>
+</div>
+`
+})

@@ -1,0 +1,181 @@
+<script runat="server">
+  Platform.Load("core", "1.1.1");
+  Platform.Response.SetResponseHeader("Access-Control-Allow-Origin", "*");
+  Platform.Response.SetResponseHeader('Strict-Transport-Security', 'max-age=200');
+  Platform.Response.SetResponseHeader('X-XSS-Protection', '1; mode=block');
+  Platform.Response.SetResponseHeader('X-Frame-Options', 'Deny');
+  Platform.Response.SetResponseHeader('X-Content-Type-Options', 'nosniff');
+  Platform.Response.SetResponseHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  Platform.Response.SetResponseHeader('Content-Security-Policy', "default-src 'self'");
+
+  var postData = Platform.Request.GetPostData();
+  var postJSON = Platform.Function.ParseJSON(postData);
+
+  var action = Platform.Request.GetQueryStringParameter('action');
+  var payload = Platform.Request.GetQueryStringParameter('payload');
+
+  var brand = Platform.Request.GetQueryStringParameter('brand');
+  var locale = Platform.Request.GetQueryStringParameter('locale');
+
+  var configPath = 'Content Builder\\BLDR_OneClick_Unsub_Pkg\\configurations' + '\\ ' + brand + '\\ ' + locale
+  var applicationConfigurationPath = configPath + '\\app_configuration'
+  applicationConfigurationPath = applicationConfigurationPath.replace(/(?<=\\)\ /g, '')
+
+  var applicationConfiguration = Platform.Function.ContentBlockByName(applicationConfigurationPath)
+  var applicationConfigurationJSON = Platform.Function.ParseJSON(applicationConfiguration)
+  var map = applicationConfigurationJSON.map;
+
+  var preferenceCenterDataExtensionExternalKey = map.data_extension.preferenceCenterExternalKey;
+
+  Platform.Function.ContentBlockByName(map.content_block.ssjs.wsProxy)
+  Platform.Function.ContentBlockByName(map.content_block.ssjs.utils)
+
+  var fns = {
+    utils: util(),
+    wsProxy: wsProxy()
+  }
+
+  var res = '';
+  var reqConfig = {};
+
+  //Begin API Control Block
+  //Run specific set of code/functions based on the 'action' parameter
+  //After code is finished, the 'response' function returns the output and 'break' stops the processing
+  switch (action) {
+    case 'testUnsub':
+
+      var sends = Send.Retrieve({ Property: "ID", SimpleOperator: "equals", Value: 12730 });
+      fns.utils.response(sends)
+
+      break;
+    case 'submitPreferenceForm':
+      var updateData = postJSON.postData;
+      var subscriber = postJSON.subscriber;
+      var unsubscribe;
+
+      var formatted;
+      var payload = [];
+      for (var u = 0; u < updateData.length; u++) {
+        var update = updateData[u];
+
+        payload.push({
+          CustomerKey: preferenceCenterDataExtensionExternalKey,
+          Properties: update
+        })
+
+        var logUnsubEvent
+        if (
+          applicationConfigurationJSON.action_toggles.unsubscribe === true ||
+          applicationConfigurationJSON.action_toggles.unsubscribe === 'true'
+        ) {
+          var formatedUpdate = fns.utils.formatResult(payload, 'Properties')
+          logUnsubEvent = postJSON.subscriber;
+          logUnsubEvent.unsubscribed = formatedUpdate[0].unsubscribed;
+
+          var allSubscribersListID = fns.utils.getAllSubscribersListID(fns)
+          var subscriberCurrentStatus = fns.utils.getSubscriberStatus(subscriber.subscriberId, fns)
+          // add All Subscribers ListID to UnsubEvent Object
+          logUnsubEvent.listId = allSubscribersListID;
+
+          unsubscribe = fns.utils.toggleUnsubscribe(logUnsubEvent, subscriberCurrentStatus, fns)
+        }
+      }
+
+      //update item
+      reqConfig = {
+        soapObjName: "DataExtensionObject",
+        options: {
+          SaveOptions: [{
+            PropertyName: "*",
+            SaveAction: "UpdateAdd"
+          }]
+        },
+        payload: payload
+      }
+      var updatePreferences = fns.wsProxy.update(reqConfig);
+
+
+      res = {
+        updatePreferences: updatePreferences,
+        unsubscribe: unsubscribe
+      }
+      break;
+
+
+    case 'getCurrentPreferences':
+      var preferences;
+      var preferenceRequest;
+
+      reqConfig = {
+        dataExtensionKey: preferenceCenterDataExtensionExternalKey,
+        cols: [],
+        filter: {
+          Property: "subscriberId",
+          SimpleOperator: "equals",
+          Value: postJSON.subscriberId
+        }
+      };
+
+      preferenceRequest = fns.utils.getDERecords(reqConfig, fns);
+
+      if (preferenceRequest.Status === 'OK') {
+        // Add Record if it does not exist
+        if (preferenceRequest.Results.length === 0) {
+          var channels = postJSON.channels;
+          var payload = [];
+          var updateConfig;
+
+          for (var c = 0; c < channels.length; c++) {
+            var channel = channels[c];
+
+            payload.push({
+              CustomerKey: preferenceCenterDataExtensionExternalKey,
+              Properties: [
+                {
+                  Name: 'subscriberId',
+                  Value: postJSON.subscriberId
+                },
+                {
+                  Name: 'emailAddress',
+                  Value: postJSON.emailAddress
+                },
+                {
+                  Name: 'channel',
+                  Value: channel
+                }
+              ]
+            })
+          }
+
+          //update item
+          updateConfig = {
+            soapObjName: "DataExtensionObject",
+            options: {
+              SaveOptions: [{
+                PropertyName: "*",
+                SaveAction: "UpdateAdd"
+              }]
+            },
+            payload: payload
+          }
+
+          var addRecords = fns.wsProxy.update(updateConfig);
+          preferenceRequest = fns.utils.getDERecords(reqConfig, fns)
+        }
+
+        preferences = fns.utils.formatResult(preferenceRequest.Results, 'Properties')
+
+        res = {
+          Status: 'OK',
+          Results: preferences
+        }
+      } else {
+        res = preferenceRequest;
+      }
+
+      break;
+  };
+
+  fns.utils.response(res)
+
+</script>

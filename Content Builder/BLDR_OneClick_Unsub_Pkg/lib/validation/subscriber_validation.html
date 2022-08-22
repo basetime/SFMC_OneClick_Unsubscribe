@@ -1,0 +1,39 @@
+%%[
+set @subscriberkey = AttributeValue("_subscriberkey")
+set @subscriberid = AttributeValue("subscriberid")
+set @emailAddress = AttributeValue("emailaddr")
+set @jobid = AttributeValue("jobid")
+]%%
+
+<script runat="server">
+  Platform.Load("core", "1.1");
+
+  var subscriberKey = Stringify(Variable.GetValue("@subscriberkey"));
+  var emailAddress = Stringify(Variable.GetValue("@emailAddress"));
+  var subscriberId = Variable.GetValue("@subscriberid");
+  var jobId = Variable.GetValue("@jobid");
+
+  var brand = Platform.Request.GetQueryStringParameter('brand');
+  var locale = Platform.Request.GetQueryStringParameter('locale');
+
+  var configPath = 'Content Builder\\BLDR_OneClick_Unsub_Pkg\\configurations' + '\\ ' + brand + '\\ ' + locale
+  var applicationConfigurationPath = configPath + '\\app_configuration'
+  applicationConfigurationPath = applicationConfigurationPath.replace(/(?<=\\)\ /g, '')
+
+  var applicationConfiguration = Platform.Function.ContentBlockByName(applicationConfigurationPath)
+  var applicationConfigurationJSON = Platform.Function.ParseJSON(applicationConfiguration)
+  var map = applicationConfigurationJSON.map;
+
+  Platform.Function.ContentBlockByName(map.content_block.ssjs.utils)
+
+  var fns = {
+    utils: util()
+  }
+
+  var authorized = 0;
+  if (subscriberId && jobId) {
+    if (subscriberId !== 0 && jobId !== 0) {
+      authorized = 1;
+    }
+  }
+</script>

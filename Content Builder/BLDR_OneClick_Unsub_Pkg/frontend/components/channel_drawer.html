@@ -1,0 +1,46 @@
+/*
+What is this component?
+*/
+Vue.component('channel-drawer', {
+  props: {
+    preferenceOptions: Object,
+    branding: Object,
+    channels: Array
+  },
+  methods: {
+    getChannelIcon: function (channel, preferenceOptions) {
+      return this.preferenceOptions['channels'][channel]['icon']
+    }
+  },
+  data() {
+    return {
+      right: null,
+    }
+  },
+  template: `
+  <div 
+    v-if="channels.length > 1"
+  >
+    <v-navigation-drawer 
+      permanent
+      max-height="100vh"
+      height="80vh"
+    >
+      <v-list dense nav>
+        <v-list-item v-for="channel in channels" :key="channel"  @click="$emit('update-channel-selection', channel)" link>
+          <v-list-item-icon>
+            <v-icon
+              large
+              :color="branding.colors.accent"
+            >{{ getChannelIcon(channel, this.preferenceOptions) }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title class="text-h6 mb-8">{{ channel }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+</div>
+`
+})
