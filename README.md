@@ -19,12 +19,12 @@ Follow instructions to install/setup [bldr cli](https://www.npmjs.com/package/@b
 
 ### Create Data Extension
 | Field             | Field Type   | Length | Default      | Primary Key |
-| ----------------- | ------------ | ------ | ------------ |------------ |
-| subscriberId      | Text         | 255    |              |
-| emailAddress      | EmailAddress | 255    |              |
-| channel           | Text         | 255    |              |
-| unsubscribed      | Boolean      |        | false        |
-| statusUpdatedDate | Date         |        | Current Date |
+| ----------------- | ------------ | ------ | ------------ | ----------- |
+| subscriberId      | Text         | 255    |              |             |
+| emailAddress      | EmailAddress | 255    |              | X           |
+| channel           | Text         | 255    |              | X           |
+| unsubscribed      | Boolean      |        | false        |             |
+| statusUpdatedDate | Date         |        | Current Date |             |
 
 <br />
 
@@ -34,7 +34,9 @@ The following assets will need to be created manually as there is no API to crea
 [OneClick_CloudPage](https://github.com/basetime/SFMC_OneClick_Unsubscribe/blob/main/Content%20Builder/OneClick_CloudPage.html)
 
 [OneClick_JSCodeResource](https://github.com/basetime/SFMC_OneClick_Unsubscribe/blob/main/Content%20Builder/OneClick_JSCodeResource.html)
+
 <br />
+
 ### Configure Unsubscribe Preference Center
 This OneClick Unsubscribe package allows for configuration on sub-brand and localization levels based on folder structure. All configuration updates are locate under `Content Builder/BLDR_OneClick_Unsub_Pkg/configuration...`. In the `configuration` folder, you will find a default setting of `default/en-us`. When no brand is provided, this will be the default fallback. 
 
