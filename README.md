@@ -11,7 +11,7 @@ Follow instructions to install/setup [bldr cli](https://www.npmjs.com/package/@b
 <br />
 
 ### Download Package
-`bldr install https://github.com/anthonymzupancic/SFMC_OneClick_Unsubscribe`
+`bldr install https://github.com/basetime/SFMC_OneClick_Unsubscribe`
 
 `bldr deploy`
 
@@ -31,9 +31,9 @@ Follow instructions to install/setup [bldr cli](https://www.npmjs.com/package/@b
 ### Create Web Studio Assets
 The following assets will need to be created manually as there is no API to create CloudPage/CodeResource assets:
 
-[OneClick_CloudPage](https://github.com/anthonymzupancic/SFMC_OneClick_Unsubscribe/blob/main/Content%20Builder/OneClick_CloudPage.html)
+[OneClick_CloudPage](https://github.com/basetime/SFMC_OneClick_Unsubscribe/blob/main/Content%20Builder/OneClick_CloudPage.html)
 
-[OneClick_JSCodeResource](https://github.com/anthonymzupancic/SFMC_OneClick_Unsubscribe/blob/main/Content%20Builder/OneClick_JSCodeResource.html)
+[OneClick_JSCodeResource](https://github.com/basetime/SFMC_OneClick_Unsubscribe/blob/main/Content%20Builder/OneClick_JSCodeResource.html)
 <br />
 ### Configure Unsubscribe Preference Center
 This OneClick Unsubscribe package allows for configuration on sub-brand and localization levels based on folder structure. All configuration updates are locate under `Content Builder/BLDR_OneClick_Unsub_Pkg/configuration...`. In the `configuration` folder, you will find a default setting of `default/en-us`. When no brand is provided, this will be the default fallback. 
