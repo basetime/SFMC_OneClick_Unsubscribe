@@ -14,7 +14,7 @@
   var action = Platform.Request.GetQueryStringParameter('action');
   var payload = Platform.Request.GetQueryStringParameter('payload');
 
-  var brand = Platform.Request.GetQueryStringParameter('brand');
+  var brand = Platform.Request.GetQueryStringParameter('brand') || 'default';
   var locale = Platform.Request.GetQueryStringParameter('locale');
 
   var configPath = 'Content Builder\\BLDR_OneClick_Unsub_Pkg\\configurations' + '\\ ' + brand + '\\ ' + locale

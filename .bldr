@@ -88,5 +88,17 @@
     "context": "contentBuilder",
     "bldrId": "93f3f5f5-926b-439f-8860-ea74076de070",
     "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components/_component_imports.html"
+  },
+  {
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/configurations/default/en-us/app_configuration.html",
+    "bldrId": "499cfb55-55b8-432f-93e5-2dac5cc0176e",
+    "id": 137347,
+    "context": "contentBuilder"
+  },
+  {
+    "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/configurations/default/en-us/preference_options.html",
+    "bldrId": "72772808-466f-4bda-ad2d-4b0a957d2545",
+    "id": 137348,
+    "context": "contentBuilder"
   }
 ]
