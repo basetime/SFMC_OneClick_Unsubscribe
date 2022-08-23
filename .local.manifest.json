@@ -70,20 +70,6 @@
         "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/configurations"
       },
       {
-        "id": 116675,
-        "name": "ikea_kitchen",
-        "parentId": 116674,
-        "categoryType": "asset",
-        "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/configurations/ikea_kitchen"
-      },
-      {
-        "id": 116676,
-        "name": "en-us",
-        "parentId": 116675,
-        "categoryType": "asset",
-        "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/configurations/ikea_kitchen/en-us"
-      },
-      {
         "id": 116705,
         "name": "default",
         "parentId": 116674,
@@ -318,42 +304,6 @@
         "customerKey": "df8617fd-f901-4d38-a5f7-76b3e030e73f"
       },
       {
-        "bldrId": "26e24fd9-992f-452d-a542-fcf75cb003cd",
-        "name": "app_configuration",
-        "assetType": {
-          "id": 220,
-          "name": "codesnippetblock",
-          "displayName": "Code Snippet Block"
-        },
-        "category": {
-          "id": 116676,
-          "name": "en-us",
-          "parentId": 116675,
-          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/configurations/ikea_kitchen/en-us"
-        },
-        "content": "{\n  \"branding\": {\n    \"brandName\": \"Ikea Kitchen Services\",\n    \"websiteURL\": \"https://www.ikea.com/\",\n    \"supportDarkMode\": \"false\",\n    \"default\": {\n      \"logo\": \"https://www.ikea.com/us/en/static/ikea-logo.f7d9229f806b59ec64cb.svg\",\n      \"colors\": {\n        \"primary\": \"#00FFFF\",\n        \"secondary\": \"blue\",\n        \"accent\": \"yellow\",\n        \"paper\": \"#fff\"\n      }\n    },\n    \"dark\": {\n      \"logo\": \"\",\n      \"colors\": {\n        \"primary\": \"\",\n        \"secondary\": \"\",\n        \"accent\": \"\",\n        \"paper\": \"\"\n      }\n    }\n  },\n  \"map\": {\n    \"content_block\": {\n      \"preference_options\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\configurations\\\\preference_options\",\n      \"branding_bar\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\branding_bar\",\n      \"channel_drawer\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\channel_drawer\",\n      \"preference_form\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\preference_form\",\n      \"unauthorized_user\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\unauthorized_user\",\n      \"legal\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\legal\",\n      \"submit_button_animation\": \"'Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\styles\\\\submit_button_animation\",\n      \"app_js\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\app_js\",\n      \"ssjs\": {\n        \"wsProxy\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\lib\\\\ssjs\\\\wsProxy\",\n        \"utils\": \"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\lib\\\\ssjs\\\\utils\"\n      }\n    },\n    \"data_extension\": {\n      \"preferenceCenterExternalKey\": \"B972F7FF-A6D3-4605-9019-3FD521EF1CD1\"\n    }\n  },\n  \"apiBaseURL\": \"https://mcygk-vddqb-fd5nvny1nslbbhgq.pub.sfmc-content.com/34oae0wqdi2\",\n  \"action_toggles\": {\n    \"unsubscribe\": true\n  }\n}",
-        "id": 137283,
-        "customerKey": "00db5bf6-4466-4d7a-b067-8c785786f962"
-      },
-      {
-        "bldrId": "2d13d6bd-062d-4fa3-9c50-4f404225b2b5",
-        "name": "preference_options",
-        "assetType": {
-          "id": 220,
-          "name": "codesnippetblock",
-          "displayName": "Code Snippet Block"
-        },
-        "category": {
-          "id": 116676,
-          "name": "en-us",
-          "parentId": 116675,
-          "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/configurations/ikea_kitchen/en-us"
-        },
-        "content": "{\n  \"profile\": {\n    \"headline\": \"\",\n    \"copy\": \"\",\n    \"inputs\": []\n  },\n  \"channels\": {\n    \"email\": {\n      \"icon\": \"mdi-email\",\n      \"subscriptions\": {\n        \"headline\": \"\",\n        \"copy\": \"Thank you for working with IKEA Kitchen Services. To update your communication preferences review the options below. Note that Unsubscribing includes all relevant marketing information, however customers will still receive required transactional information, such as payment receipts and service confirmations. Please review our <a href='https://traemand.com/privacy-policy/' target='_blank'>privacy policy</a> for information on how we use and process your data. <br><br> We will send you relevant marketing information and carry out market research about our products and services through email, phone (e.g. SMS, MMS, voice).\",\n        \"inputs\": [],\n        \"checkboxes\": []\n      }\n    }\n  },\n  \"unauthorized\": {\n    \"icon\": \"mdi-account-question\",\n    \"copy\": \"Looks like we can't find you in your system. <br> Please ensure you've reached this page from an Ikea email. <br><br> Visit <a href='https://www.ikea.com'>IKEA.com</a> to sign up for emails.\"\n  },\n  \"legal\": {\n    \"icon\": \"mdi-account-question\",\n    \"copy\": \"\"\n  }\n}\n",
-        "id": 137284,
-        "customerKey": "2aebce0d-7dc2-4a4e-9141-6b311e917222"
-      },
-      {
         "bldrId": "93f3f5f5-926b-439f-8860-ea74076de070",
         "name": "_component_imports",
         "assetType": {
@@ -368,38 +318,6 @@
           "folderPath": "Content Builder/BLDR_OneClick_Unsub_Pkg/frontend/components"
         },
         "content": "%%=TreatAsContent(ContentBlockByName('Content Builder\\BLDR_OneClick_Unsub_Pkg\\lib\\validation\\subscriber_validation'))=%%\n\n<script runat=\"server\">\n  Platform.Load(\"core\", \"1.1.1\");\n\n  var brand = Platform.Request.GetQueryStringParameter('brand') || 'default';\n  var locale = Platform.Request.GetQueryStringParameter('locale') || 'en-us'\n\n  var configPath = 'Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\configurations' + '\\\\ ' + brand + '\\\\ ' + locale\n  var applicationConfigurationPath = configPath + '\\\\app_configuration'\n  var preferenceOptionsPath = configPath + '\\\\preference_options'\n\n  applicationConfigurationPath = applicationConfigurationPath.replace(/(?<=\\\\)\\ /g, '')\n  preferenceOptionsPath = preferenceOptionsPath.replace(/(?<=\\\\)\\ /g, '')\n\n  var applicationConfiguration = Platform.Function.ContentBlockByName(applicationConfigurationPath)\n  var preferenceOptions = Platform.Function.ContentBlockByName(preferenceOptionsPath)\n  var applicationConfigurationJSON = Platform.Function.ParseJSON(applicationConfiguration)\n      \n  var channelDrawer = Platform.Function.ContentBlockByName(\"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\channel_drawer\")\n  var preferenceForm = Platform.Function.ContentBlockByName(\"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\preference_form\")\n  var unauthorizedUser = Platform.Function.ContentBlockByName(\"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\unauthorized_user\")\n  var brandingBar = Platform.Function.ContentBlockByName(\"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\branding_bar\")\n  var legal = Platform.Function.ContentBlockByName(\"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\components\\\\legal\")\n  var appJS = Platform.Function.ContentBlockByName(\"Content Builder\\\\BLDR_OneClick_Unsub_Pkg\\\\frontend\\\\app_js\")\n\n</script>\n\n%%=Concat('<sc','rip','t>')=%%\n\n  Vue.use(VueToast, {\n  position: 'top-right',\n  duration: 6000,\n  dismissable: true\n  });\n\n  Vue.use(VueFormulate)\n\n  const applicationConfiguration = <ctrl:var name=applicationConfiguration />\n  const preferenceOptions = <ctrl:var name=preferenceOptions />\n\n  const channelKeys = Object.keys(preferenceOptions.channels);\n  const channelSelection = channelKeys[0];\n\n  const isAuthorized = <ctrl:var name=authorized />\n  const subscriberId = <ctrl:var name=subscriberId />\n  const emailAddress = <ctrl:var name=emailAddress />\n  const subscriberKey = <ctrl:var name=subscriberKey />\n  const jobId = <ctrl:var name=jobId />\n  const brand = \"<ctrl:var name=brand />\"\n  const locale = \"<ctrl:var name=locale />\"\n\n  <ctrl:var name=appJS />\n  <ctrl:var name=brandingBar />\n  <ctrl:var name=channelDrawer />\n  <ctrl:var name=preferenceForm />\n  <ctrl:var name=unauthorizedUser />\n  <ctrl:var name=legal />\n\n  %%=Concat('</sc','rip','t>')=%%",
-        "dependencies": [
-          {
-            "context": "contentBuilder",
-            "ref": "ContentBlockByName",
-            "bldrId": "8111eb7f-60e2-45f1-a170-d813d92867ff"
-          },
-          {
-            "context": "contentBuilder",
-            "ref": "ContentBlockByName",
-            "bldrId": "c6c91d78-0e7c-4e64-8bed-fa2bc4610af4"
-          },
-          {
-            "context": "contentBuilder",
-            "ref": "ContentBlockByName",
-            "bldrId": "8111eb7f-60e2-45f1-a170-d813d92867ff"
-          },
-          {
-            "context": "contentBuilder",
-            "ref": "ContentBlockByName",
-            "bldrId": "c6c91d78-0e7c-4e64-8bed-fa2bc4610af4"
-          },
-          {
-            "context": "contentBuilder",
-            "ref": "ContentBlockByName",
-            "bldrId": "8111eb7f-60e2-45f1-a170-d813d92867ff"
-          },
-          {
-            "context": "contentBuilder",
-            "ref": "ContentBlockByName",
-            "bldrId": "c6c91d78-0e7c-4e64-8bed-fa2bc4610af4"
-          }
-        ],
         "id": 137285,
         "customerKey": "4a48e3f6-09da-4fc9-b8e1-c3653baceab2"
       },
