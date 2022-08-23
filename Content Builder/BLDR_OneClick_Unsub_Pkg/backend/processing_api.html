@@ -15,7 +15,7 @@
   var payload = Platform.Request.GetQueryStringParameter('payload');
 
   var brand = Platform.Request.GetQueryStringParameter('brand') || 'default';
-  var locale = Platform.Request.GetQueryStringParameter('locale');
+  var locale = Platform.Request.GetQueryStringParameter('locale') || 'en-us';
 
   var configPath = 'Content Builder\\BLDR_OneClick_Unsub_Pkg\\configurations' + '\\ ' + brand + '\\ ' + locale
   var applicationConfigurationPath = configPath + '\\app_configuration'
@@ -23,12 +23,11 @@
 
   var applicationConfiguration = Platform.Function.ContentBlockByName(applicationConfigurationPath)
   var applicationConfigurationJSON = Platform.Function.ParseJSON(applicationConfiguration)
-  var map = applicationConfigurationJSON.map;
 
-  var preferenceCenterDataExtensionExternalKey = map.data_extension.preferenceCenterExternalKey;
+  var preferenceCenterDataExtensionExternalKey = applicationConfigurationJSON.dataExtension.preferenceCenterExternalKey;
 
-  Platform.Function.ContentBlockByName(map.content_block.ssjs.wsProxy)
-  Platform.Function.ContentBlockByName(map.content_block.ssjs.utils)
+  Platform.Function.ContentBlockByName("Content Builder\\BLDR_OneClick_Unsub_Pkg\\lib\\ssjs\\wsProxy")
+  Platform.Function.ContentBlockByName("Content Builder\\BLDR_OneClick_Unsub_Pkg\\lib\\ssjs\\utils")
 
   var fns = {
     utils: util(),
@@ -65,8 +64,8 @@
 
         var logUnsubEvent
         if (
-          applicationConfigurationJSON.action_toggles.unsubscribe === true ||
-          applicationConfigurationJSON.action_toggles.unsubscribe === 'true'
+          applicationConfigurationJSON.actionToggles.unsubscribe === true ||
+          applicationConfigurationJSON.actionToggles.unsubscribe === 'true'
         ) {
           var formatedUpdate = fns.utils.formatResult(payload, 'Properties')
           logUnsubEvent = postJSON.subscriber;

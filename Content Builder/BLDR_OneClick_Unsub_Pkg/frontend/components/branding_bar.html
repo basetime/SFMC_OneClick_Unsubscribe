@@ -23,7 +23,7 @@ methods: {
 template: `
 <div>
   <v-card>
-    <v-app-bar :color="branding.colors.paper" position="absolute" height="100">
+    <v-app-bar :color="branding.colors.navBackground" position="absolute" height="100">
       <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
 
       <v-toolbar-title>
@@ -32,7 +32,7 @@ template: `
 
       <v-spacer></v-spacer>
       
-      <v-switch v-show="branding.supportDarkMode" :color="branding.colors.accent" @click="$emit('update-dark-mode')" v-model="darkModeToggle">
+      <v-switch v-show="branding.supportDarkMode" :color="branding.colors.btnBackground" @click="$emit('update-dark-mode')" v-model="darkModeToggle">
         <template v-slot:label>
           <v-icon v-if="darkModeToggle" large color="#F5F5F5">
             mdi-moon-waxing-crescent

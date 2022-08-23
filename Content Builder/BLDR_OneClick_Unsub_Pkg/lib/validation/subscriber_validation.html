@@ -14,7 +14,7 @@ set @jobid = AttributeValue("jobid")
   var jobId = Variable.GetValue("@jobid");
 
   var brand = Platform.Request.GetQueryStringParameter('brand') || 'default';
-  var locale = Platform.Request.GetQueryStringParameter('locale');
+  var locale = Platform.Request.GetQueryStringParameter('locale') || 'en-us';
 
   var configPath = 'Content Builder\\BLDR_OneClick_Unsub_Pkg\\configurations' + '\\ ' + brand + '\\ ' + locale
 
@@ -22,15 +22,8 @@ set @jobid = AttributeValue("jobid")
   applicationConfigurationPath = applicationConfigurationPath.replace(/(?<=\\)\ /g, '')
   var applicationConfiguration = Platform.Function.ContentBlockByName(applicationConfigurationPath)
   var applicationConfigurationJSON = Platform.Function.ParseJSON(applicationConfiguration)
-  var map = applicationConfigurationJSON.map;
-  var actionToggles = applicationConfigurationJSON.action_toggles;
+  var actionToggles = applicationConfigurationJSON.actionToggles;
   var validation = actionToggles.enforceValidation;
-
-  Platform.Function.ContentBlockByName(map.content_block.ssjs.utils)
-
-  var fns = {
-    utils: util()
-  }
 
   var authorized = 0;
   if (validation.subscriberId && validation.jobId && subscriberId  !== "0" && jobId !== "0") {

@@ -139,22 +139,12 @@ Vue.component('preference-form', {
 
   <v-row>
     <v-col cols="12" md="8">
-      <v-btn class="ma-2" v-if="channelPreferences.unsubscribed === 'False'" :loading="formSubmitting" :disabled="formSubmitting" color="info" @click="oneClickUnsubscribe">
+      <v-btn class="ma-2" v-if="channelPreferences.unsubscribed === 'False'" :dark="branding.colors.btnTextWhite === 'true'" :loading="formSubmitting" :disabled="formSubmitting" :color="branding.colors.btnBackground" @click="oneClickUnsubscribe">
         Unsubscribe From All
-        <template v-slot:loader>
-          <span class="custom-loader">
-            <v-icon light>mdi-cached</v-icon>
-          </span>
-        </template>
       </v-btn>
 
-      <v-btn class="ma-2" v-else :loading="formSubmitting" :disabled="formSubmitting" color="info" @click="oneClickSubscribe">
+      <v-btn class="ma-2" v-else :loading="formSubmitting" :disabled="formSubmitting" :dark="branding.colors.btnTextWhite === 'true'" :color="branding.colors.btnBackground" @click="oneClickSubscribe">
         Subscribe To All
-        <template v-slot:loader>
-          <span class="custom-loader">
-            <v-icon light>mdi-cached</v-icon>
-          </span>
-        </template>
       </v-btn>
     </v-col>
   </v-row>

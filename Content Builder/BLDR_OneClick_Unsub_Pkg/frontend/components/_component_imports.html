@@ -1,11 +1,10 @@
-%%=TreatAsContent(ContentBlockByName('Content Builder\BLDR_OneClick_Unsub_Pkg\frontend\styles\submit_button_animation'))=%%
 %%=TreatAsContent(ContentBlockByName('Content Builder\BLDR_OneClick_Unsub_Pkg\lib\validation\subscriber_validation'))=%%
 
 <script runat="server">
   Platform.Load("core", "1.1.1");
 
   var brand = Platform.Request.GetQueryStringParameter('brand') || 'default';
-  var locale = Platform.Request.GetQueryStringParameter('locale')
+  var locale = Platform.Request.GetQueryStringParameter('locale') || 'en-us'
 
   var configPath = 'Content Builder\\BLDR_OneClick_Unsub_Pkg\\configurations' + '\\ ' + brand + '\\ ' + locale
   var applicationConfigurationPath = configPath + '\\app_configuration'
@@ -17,14 +16,13 @@
   var applicationConfiguration = Platform.Function.ContentBlockByName(applicationConfigurationPath)
   var preferenceOptions = Platform.Function.ContentBlockByName(preferenceOptionsPath)
   var applicationConfigurationJSON = Platform.Function.ParseJSON(applicationConfiguration)
-  var map = applicationConfigurationJSON.map;
-
-  var channelDrawer = Platform.Function.ContentBlockByName(map.content_block.channel_drawer)
-  var preferenceForm = Platform.Function.ContentBlockByName(map.content_block.preference_form)
-  var unauthorizedUser = Platform.Function.ContentBlockByName(map.content_block.unauthorized_user)
-  var brandingBar = Platform.Function.ContentBlockByName(map.content_block.branding_bar)
-  var legal = Platform.Function.ContentBlockByName(map.content_block.legal)
-  var appJS = Platform.Function.ContentBlockByName(map.content_block.app_js)
+      
+  var channelDrawer = Platform.Function.ContentBlockByName("Content Builder\\BLDR_OneClick_Unsub_Pkg\\frontend\\components\\channel_drawer")
+  var preferenceForm = Platform.Function.ContentBlockByName("Content Builder\\BLDR_OneClick_Unsub_Pkg\\frontend\\components\\preference_form")
+  var unauthorizedUser = Platform.Function.ContentBlockByName("Content Builder\\BLDR_OneClick_Unsub_Pkg\\frontend\\components\\unauthorized_user")
+  var brandingBar = Platform.Function.ContentBlockByName("Content Builder\\BLDR_OneClick_Unsub_Pkg\\frontend\\components\\branding_bar")
+  var legal = Platform.Function.ContentBlockByName("Content Builder\\BLDR_OneClick_Unsub_Pkg\\frontend\\components\\legal")
+  var appJS = Platform.Function.ContentBlockByName("Content Builder\\BLDR_OneClick_Unsub_Pkg\\frontend\\app_js")
 
 </script>
 
