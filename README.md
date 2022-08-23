@@ -15,13 +15,8 @@ Follow instructions to install/setup [bldr cli](https://www.npmjs.com/package/@b
 | -----| ----------| --------|--------|
 | subscriberId  | Text | 50 | |
 | emailAddress | Text | 50 | |
-
-channel
-Text
-50
-
-preference
-Text
+| channel| Text| 50 | |
+| preference| Text
 
 subscriptions
 Text

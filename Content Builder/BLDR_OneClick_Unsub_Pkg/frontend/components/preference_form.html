@@ -1,6 +1,7 @@
 
-/*
-What is this component?
+/**
+* Responsible for showing unsubscribe headline/copy and capturing user unsubscribe action.
+* Emits response to main App Functions
 */
 Vue.component('preference-form', {
   props: {
@@ -11,75 +12,47 @@ Vue.component('preference-form', {
     formSubmitting: Boolean,
     subscriberPreferences: Array
   },
-  beforeMount() {
-    this.setFormInputSchema();
-    this.setProfileFormSchema();
-    this.setPreferenceFormSchema();
-    this.setSubscriptionFormSchema();
-
-    this.setFormInputValues('preferences')
-    this.setFormInputValues('subscriptions')
-    this.setFormInputValues('unsubscribe')
-  },
   data() {
     return {
       oneClickUnsub: false,
-      profileFormSchema: [],
-      preferenceFormSchema: [],
-      subscriptionFormSchema: [],
-      formInputs: {}
+      formInputs: {
+        unsubscribe: {
+          unsubscribed: null,
+          hasUpdatedValues: false
+        }
+      }
     }
   },
   methods: {
     async oneClickSubscribe() {
-      this.formInputs[this.channelSelection]['unsubscribe'] = {
+      this.formInputs.unsubscribe = {
         unsubscribed: false,
         hasUpdatedValues: this.subscriberPreferences[0].unsubscribed === true || this.subscriberPreferences[0].unsubscribed === 'True' ? true : false
       };
 
-      await this.setFormInputValues('subscriptions', true)
-      await this.setFormInputValues('preference', true)
       await this.submitPreferenceForm()
-      await this.setFormInputValues('preferences')
-      await this.setFormInputValues('subscriptions')
     },
     async oneClickUnsubscribe() {
-      this.formInputs[this.channelSelection]['unsubscribe'] = {
+      this.formInputs.unsubscribe = {
         unsubscribed: true,
         hasUpdatedValues: this.subscriberPreferences[0].unsubscribed === false || this.subscriberPreferences[0].unsubscribed === 'False' ? true : false
       };
 
-      await this.setFormInputValues('subscriptions', true)
-      await this.setFormInputValues('preference', true)
       await this.submitPreferenceForm()
-      await this.setFormInputValues('preferences')
-      await this.setFormInputValues('subscriptions')
     },
     submitPreferenceForm() {
       const channels = this.channels;
       let emit = this.formInputs
-      emit.profile.hasUpdatedValues = this.checkForUpdatedValues(emit.profile, this.channelPreferences)
-
+     
       for (const c in channels) {
         const channel = channels[c];
         const channelPreferences = this.setChannelPreferences(channel);
-        const subscriptions = channelPreferences.subscriptions.split("|")
-        emit[channel]['unsubscribe']['hasUpdatedValues'] = this.checkForUpdatedValues(emit[channel]['unsubscribe'], channelPreferences)
-
-        if (emit[channel]['preferences']['preference']) {
-          emit[channel]['preferences']['hasUpdatedValues'] = this.checkForUpdatedValues(emit[channel]['preferences'], channelPreferences)
-        }
-
-        if (emit[channel]['subscriptions']['subscriptions'].length) {
-          emit[channel]['subscriptions']['hasUpdatedValues'] = this.checkForUpdatedValues(emit[channel]['subscriptions'].subscriptions, subscriptions)
-        }
+        emit['unsubscribe']['hasUpdatedValues'] = this.checkForUpdatedValues(emit['unsubscribe'], channelPreferences)
       }
-
 
       this.$emit('submit-preference-form', emit)
     },
     checkForUpdatedValues(updateObject, existingObject) {
-
       for (const u in updateObject) {
         const updatedProfileValue = updateObject[u];
         const existingProfileValue = existingObject[u];
@@ -93,66 +66,6 @@ Vue.component('preference-form', {
 
       return false;
     },
-    setProfileFormSchema() {
-      if (Object.prototype.hasOwnProperty.call(this.preferenceOptions, 'profile')) {
-        let profileSchema = []
-
-        if (
-          Object.prototype.hasOwnProperty.call(this.preferenceOptions.profile, 'inputs')
-        ) {
-          const profileData = this.preferenceOptions.profile.inputs;
-
-          for (const pro in profileData) {
-            let inputObject = profileData[pro];
-
-            this.formInputs['profile'][inputObject.name] = this.channelPreferences[inputObject.name] ? this.channelPreferences[inputObject.name] : '';
-
-            profileSchema.push(inputObject)
-          }
-        }
-
-        this.profileFormSchema = profileSchema
-      }
-    },
-    setPreferenceFormSchema() {
-      if (Object.prototype.hasOwnProperty.call(this.preferenceChannelConfiguration, 'preferences')) {
-        let preferenceSchema = []
-
-        if (
-          Object.prototype.hasOwnProperty.call(this.preferenceChannelConfiguration['preferences'], 'radios')
-        ) {
-          preferenceSchema.push({
-            "name": "preference",
-            "type": "radio",
-            "options": this.preferenceChannelConfiguration['preferences']['radios']
-          })
-        }
-
-        this.preferenceFormSchema = preferenceSchema
-      }
-    },
-    setSubscriptionFormSchema() {
-      if (Object.prototype.hasOwnProperty.call(this.preferenceChannelConfiguration, 'subscriptions')) {
-        let subscriptionSchema = []
-
-        if (!Object.prototype.hasOwnProperty.call(this.formInputs[channelSelection], 'subscriptions')) {
-          this.formInputs[channelSelection]['subscriptions'] = {};
-        }
-
-
-        if (
-          Object.prototype.hasOwnProperty.call(this.preferenceChannelConfiguration['subscriptions'], 'checkboxes')
-        ) {
-          subscriptionSchema.push({
-            "name": "subscriptions",
-            "type": "checkbox",
-            "options": this.preferenceChannelConfiguration['subscriptions']['checkboxes']
-          })
-        }
-
-        this.subscriptionFormSchema = subscriptionSchema
-      }
-    },
     setFormInputSchema() {
       this.formInputs = {
         profile: {}
@@ -164,32 +77,8 @@ Vue.component('preference-form', {
     },
     setFormInputValues(objectKey, reset = false) {
       const channels = this.channels;
-
       for (const c in channels) {
         switch (objectKey) {
-          case 'preferences':
-            if (!Object.prototype.hasOwnProperty.call(this.formInputs[channels[c]], 'preferences')) {
-              this.formInputs[channels[c]]['preferences'] = {};
-            }
-
-            this.formInputs[channels[c]]['preferences']['preference'] = this.setChannelPreferences(channels[c])['preference'];
-
-            if (reset) {
-              this.formInputs[channels[c]]['preferences']['preference'] = '';
-            }
-            break;
-          case 'subscriptions':
-            if (!Object.prototype.hasOwnProperty.call(this.formInputs[channels[c]], 'subscriptions')) {
-              this.formInputs[channels[c]]['subscriptions'] = {};
-            }
-
-            this.formInputs[channels[c]]['subscriptions']['subscriptions'] = this.setChannelPreferences(channels[c])['subscriptions'].split("|") || [];
-
-            if (reset) {
-              this.formInputs[channels[c]]['subscriptions']['subscriptions'] = [];
-            }
-
-            break;
           case 'unsubscribe':
             if (!Object.prototype.hasOwnProperty.call(this.formInputs[channels[c]], 'unsubscribe')) {
               this.formInputs[channels[c]]['unsubscribe'] = {
@@ -212,19 +101,10 @@ Vue.component('preference-form', {
   },
   watch: {
     channelSelection: function (newVal, oldVal) {
-      this.setProfileFormSchema();
-      this.setPreferenceFormSchema();
       this.setSubscriptionFormSchema();
     }
   },
   computed: {
-    selectionLength() {
-      if (this.preferenceFormSchema.length && this.subscriptionFormSchema.length) {
-        return 4
-      }
-
-      return 8
-    },
     preferenceChannelConfiguration() {
       if (this.channelSelection) {
         return this.preferenceOptions['channels'][this.channelSelection]
@@ -238,18 +118,6 @@ Vue.component('preference-form', {
   },
   template: `
 <section>
-
-  <!-- Profile Input Section -->
-  <v-row v-if="profileFormSchema" class="flex">
-    <v-col cols="12" class="justify-center">
-      <h2 v-if="preferenceChannelConfiguration.profile && preferenceChannelConfiguration.profile.headline">{{preferenceChannelConfiguration.profile.headline}}</h2>
-      <span v-if="preferenceChannelConfiguration.profile && preferenceChannelConfiguration.profile.copy" v-html="preferenceChannelConfiguration.profile.copy"></span>
-      <div v-show="preferenceOptions.profile.inputs">
-        <formulate-form :values="formInputs['profile']" v-model="formInputs['profile']" :schema="profileFormSchema" />
-      </div>
-    </v-col>
-  </v-row>
-
   <v-row>
     <v-col cols="12" md="8">
       <h3>{{channelPreferences.emailAddress}}</h3>
@@ -260,22 +128,11 @@ Vue.component('preference-form', {
   </v-row>
 
   <v-row class="flex">
-
-    <!-- Preference Radio Selection Section -->
-    <v-col v-if="preferenceFormSchema.length" cols="12" :md="selectionLength" class="mb-xs-4 mb-md-0">
-      <div v-show="channelSelection">
-        <h2 v-if="preferenceChannelConfiguration.preference && preferenceChannelConfiguration.preference.headline">{{preferenceChannelConfiguration.preference.headline}}</h2>
-        <span v-if="preferenceChannelConfiguration.preference && preferenceChannelConfiguration.preference.copy" v-html="preferenceChannelConfiguration.preference.copy"></span>
-        <formulate-form :values="formInputs[channelSelection]['preferences']" v-model="formInputs[channelSelection]['preferences']" :schema="preferenceFormSchema" />
-      </div>
-    </v-col>
-
     <!-- Subscription Checkbox Selection Section -->
-    <v-col v-if="subscriptionFormSchema.length" cols="12" :md="selectionLength">
+    <v-col cols="12" md="8">
       <div v-show="channelSelection">
-        <h2 v-if="preferenceChannelConfiguration.subscriptions && preferenceChannelConfiguration.subscriptions.headline">{{preferenceChannelConfiguration.subscriptions.headline}}</h2>
-        <span v-if="preferenceChannelConfiguration.subscriptions && preferenceChannelConfiguration.subscriptions.copy" v-html="preferenceChannelConfiguration.subscriptions.copy"></span>
-        <formulate-form :values="formInputs[channelSelection]['subscriptions']" v-model="formInputs[channelSelection]['subscriptions']" :schema="subscriptionFormSchema" />
+        <h2 v-if="preferenceChannelConfiguration.unsubscribe && preferenceChannelConfiguration.unsubscribe.headline">{{preferenceChannelConfiguration.unsubscribe.headline}}</h2>
+        <span v-if="preferenceChannelConfiguration.unsubscribe && preferenceChannelConfiguration.unsubscribe.copy" v-html="preferenceChannelConfiguration.unsubscribe.copy"></span>
       </div>
     </v-col>
   </v-row>
@@ -299,16 +156,6 @@ Vue.component('preference-form', {
           </span>
         </template>
       </v-btn>
-
-
-      <!-- <v-btn class="ma-2" :loading="formSubmitting" :disabled="formSubmitting" color="info" @click="submitPreferenceForm">
-        Submit Updates
-        <template v-slot:loader>
-          <span class="custom-loader">
-            <v-icon light>mdi-cached</v-icon>
-          </span>
-        </template>
-      </v-btn> -->
     </v-col>
   </v-row>
 </section>

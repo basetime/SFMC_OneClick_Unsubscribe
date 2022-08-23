@@ -23,6 +23,8 @@ set @jobid = AttributeValue("jobid")
   var applicationConfiguration = Platform.Function.ContentBlockByName(applicationConfigurationPath)
   var applicationConfigurationJSON = Platform.Function.ParseJSON(applicationConfiguration)
   var map = applicationConfigurationJSON.map;
+  var actionToggles = applicationConfigurationJSON.action_toggles;
+  var validation = actionToggles.enforceValidation;
 
   Platform.Function.ContentBlockByName(map.content_block.ssjs.utils)
 
@@ -30,10 +32,13 @@ set @jobid = AttributeValue("jobid")
     utils: util()
   }
 
-  var authorized = 1;
-  if (subscriberId && jobId) {
-    if (subscriberId !== 0 && jobId !== 0) {
+  var authorized = 0;
+  if (validation.subscriberId && validation.jobId && subscriberId  !== "0" && jobId !== "0") {
       authorized = 1;
-    }
+  } else if(validation.subscriberId && subscriberId !== "0" && !validation.jobId){
+    authorized = 1
+  } else if(validation.jobId && jobId !== "0"  && !validation.subscriberId){
+    authorized = 1
   }
+
 </script>

@@ -42,7 +42,7 @@
   //Run specific set of code/functions based on the 'action' parameter
   //After code is finished, the 'response' function returns the output and 'break' stops the processing
   switch (action) {
-    case 'testUnsub':
+    case 'test':
 
       var sends = Send.Retrieve({ Property: "ID", SimpleOperator: "equals", Value: 12730 });
       fns.utils.response(sends)
