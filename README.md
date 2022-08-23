@@ -20,9 +20,9 @@ Follow instructions to install/setup [bldr cli](https://www.npmjs.com/package/@b
 ### Create Data Extension
 | Field             | Field Type | Length | Default      |
 | ----------------- | ---------- | ------ | ------------ |
-| subscriberId      | Text       | 50     |              |
-| emailAddress      | Text       | 50     |              |
-| channel           | Text       | 50     |              |
+| subscriberId      | Text       | 255    |              |
+| emailAddress      | Text       | 255    |              |
+| channel           | Text       | 255    |              |
 | unsubscribed      | Boolean    |        | false        |
 | statusUpdatedDate | Date       |        | Current Date |
 
@@ -54,7 +54,7 @@ The OneClick Unsubscribe has two configuration files:
 | >> supportDarkMode             | Toggle darkmode support          |
 | >> default / dark              | Logo/color options               |
 | >> >> logo                     | Image URL of logo                |
-| >> >> Colors                    |                                  |
+| >> >> Colors                   |                                  |
 | >> >> >> navBackground         | Navigation Bar Background Color  |
 | >> >> >> btnBackground         | Button Background Color          |
 | >> >> >> btnTextWhite          | Toggle button text white         |
