@@ -18,13 +18,13 @@ Follow instructions to install/setup [bldr cli](https://www.npmjs.com/package/@b
 <br />
 
 ### Create Data Extension
-| Field             | Field Type | Length | Default      |
-| ----------------- | ---------- | ------ | ------------ |
-| subscriberId      | Text       | 255    |              |
-| emailAddress      | Text       | 255    |              |
-| channel           | Text       | 255    |              |
-| unsubscribed      | Boolean    |        | false        |
-| statusUpdatedDate | Date       |        | Current Date |
+| Field             | Field Type   | Length | Default      | Primary Key |
+| ----------------- | ------------ | ------ | ------------ |------------ |
+| subscriberId      | Text         | 255    |              |
+| emailAddress      | EmailAddress | 255    |              |
+| channel           | Text         | 255    |              |
+| unsubscribed      | Boolean      |        | false        |
+| statusUpdatedDate | Date         |        | Current Date |
 
 <br />
 
